@@ -1,4 +1,4 @@
-import edu.princeton.cs.algs4.StdOut;
+// import edu.princeton.cs.algs4.StdOut;
 
 public class Board
 {
@@ -13,104 +13,7 @@ public class Board
     size = blocks[0].length;
   }
 
-  /* [ TEST METHODS ] */
 
-  private static int testGetBlockNumberXY(boolean verbose)
-  {
-    boolean rs = true;
-    String tname = new Object(){}.getClass().getEnclosingMethod().getName();
-    StdOut.printf("test function '%s' %s",
-                  tname, (verbose ? "... \n" : ""));
-
-    Board board = new Board(new int[3][3]);
-    for (int i = 1; i < 10; ++i) {
-      int[] vals = new int[2];
-      board.getBlockNumberXY(i, vals);
-
-      if ( (i == 1 && (vals[0] != 1 || vals[1] != 1)) ||
-           (i == 2 && (vals[0] != 1 || vals[1] != 2)) ||
-           (i == 3 && (vals[0] != 1 || vals[1] != 3)) ||
-           (i == 4 && (vals[0] != 2 || vals[1] != 1)) ||
-           (i == 5 && (vals[0] != 2 || vals[1] != 2)) ||
-           (i == 6 && (vals[0] != 2 || vals[1] != 3)) ||
-           (i == 7 && (vals[0] != 3 || vals[1] != 1)) ||
-           (i == 8 && (vals[0] != 3 || vals[1] != 2)) ||
-           (i == 9 && (vals[0] != 3 || vals[1] != 3)) )
-      {
-        rs = false;
-      }
-
-      if (verbose)
-        StdOut.printf("%d : (%d, %d)\n", i, vals[0], vals[1]);
-    }
-
-    StdOut.printf("... %s\n", (rs == true ? "OK" : "Failed :("));
-    return (rs == true ? 0 : -1);
-  }
-
-  private static int testGetBlockNumber(boolean verbose)
-  {
-    boolean rs = true;
-    String tname = new Object(){}.getClass().getEnclosingMethod().getName();
-    StdOut.printf("test function '%s' %s",
-                  tname, (verbose ? "... \n" : ""));
-
-    Board board = new Board(new int[3][3]);
-    for (int i = 0; i < board.size; ++i) {
-      for (int j = 0; j < board.size; ++j) {
-        int v = board.getBlockNumber(i, j);
-        if ( (i == 0 && j == 0 && (v != 1)) ||
-             (i == 0 && j == 1 && (v != 2)) ||
-             (i == 0 && j == 2 && (v != 3)) ||
-             (i == 1 && j == 0 && (v != 4)) ||
-             (i == 1 && j == 1 && (v != 5)) ||
-             (i == 1 && j == 2 && (v != 6)) ||
-             (i == 2 && j == 0 && (v != 7)) ||
-             (i == 2 && j == 1 && (v != 8)) ||
-             (i == 2 && j == 2 && (v != 9)) )
-        {
-          rs = false;
-        }
-
-        if (verbose)
-          StdOut.printf("[%d,%d] : %d\n", i, j, v);
-      }
-    }
-
-    StdOut.printf("... %s\n", (rs == true ? "OK" : "Failed :("));
-    return (rs == true ? 0 : -1);
-  }
-
-  private static int testHamming(boolean verbose)
-  {
-    boolean rs = true;
-    String tname = new Object(){}.getClass().getEnclosingMethod().getName();
-    StdOut.printf("test function '%s' %s",
-                  tname, (verbose ? "... \n" : ""));
-
-    int initBlocks[][] = new int[3][3];
-    initBlocks[0][0] = 8;
-    initBlocks[0][1] = 1;
-    initBlocks[0][2] = 3;
-    initBlocks[1][0] = 4;
-    initBlocks[1][1] = 0;
-    initBlocks[1][2] = 2;
-    initBlocks[2][0] = 7;
-    initBlocks[2][1] = 6;
-    initBlocks[2][2] = 5;
-    Board board = new Board(initBlocks);
-
-    int v = board.hamming();
-    if (v != 5) rs = false;
-
-    if (verbose) {
-      StdOut.printf("%s\n", board.toString());
-      StdOut.printf("board.hamming() = %d\n", v);
-    }
-
-    StdOut.printf("... %s\n", (rs == true ? "OK" : "Failed :("));
-    return (rs == true ? 0 : -1);
-  }
 
   /* [ PRIVATE METHODS ] */
 
@@ -153,8 +56,8 @@ public class Board
   public int manhattan()
   {
     int rs = 0;
-    int v1[] = new int[2];
-    int v2[] = new int[2];
+    int[] v1 = new int[2];
+    int[] v2 = new int[2];
 
     for (int i = 0; i < size; ++i) {
       for (int j = 0; j < size; ++j) {
@@ -210,9 +113,6 @@ public class Board
   // unit tests (not graded)
   public static void main(String[] args)
   {
-    testGetBlockNumberXY(false);
-    testGetBlockNumber(true);
-    testHamming(true);
 
   }
 }
