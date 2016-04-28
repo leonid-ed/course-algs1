@@ -17,5 +17,11 @@ FastCollinearPoints: FastCollinearPoints.java
 zip: Point.java BruteCollinearPoints.java FastCollinearPoints.java
 	zip collinear.zip Point.java BruteCollinearPoints.java FastCollinearPoints.java
 
+checkstyle: Point.java BruteCollinearPoints.java FastCollinearPoints.java
+	checkstyle-algs4 Point.java BruteCollinearPoints.java FastCollinearPoints.java
+
+findbugs: Point BruteCollinearPoints FastCollinearPoints
+	findbugs-algs4 *.class
+
 clean:
 	rm -f collinear.zip *.class
