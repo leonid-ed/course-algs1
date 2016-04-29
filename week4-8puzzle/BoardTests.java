@@ -3,6 +3,13 @@ import edu.princeton.cs.algs4.StdOut;
 
 public class BoardTests
 {
+  /* [ HELPFUL METHODS ] */
+  private static int printTestFinish(boolean rs)
+  {
+    StdOut.printf("... %s\n", (rs == true ? "OK" : "Failed :("));
+    return (rs == true ? 0 : -1);
+  }
+
   /* [ TEST PRIVATE METHODS ] */
 
   private static int testGetBlockNumberXY(boolean verbose)
@@ -80,8 +87,7 @@ public class BoardTests
       }
     }
 
-    StdOut.printf("... %s\n", (rs == true ? "OK" : "Failed :("));
-    return (rs == true ? 0 : -1);
+    return printTestFinish(rs);
   }
 
   /* [ TEST PUBLIC METHODS ] */
@@ -113,8 +119,7 @@ public class BoardTests
       StdOut.printf("board.hamming() = %d\n", v);
     }
 
-    StdOut.printf("... %s\n", (rs == true ? "OK" : "Failed :("));
-    return (rs == true ? 0 : -1);
+    return printTestFinish(rs);
   }
 
   private static int testManhattan(boolean verbose)
@@ -144,8 +149,7 @@ public class BoardTests
       StdOut.printf("board.manhattan() = %d\n", v);
     }
 
-    StdOut.printf("... %s\n", (rs == true ? "OK" : "Failed :("));
-    return (rs == true ? 0 : -1);
+    return printTestFinish(rs);
   }
 
   private static int testIsGoal(boolean verbose)
@@ -174,8 +178,7 @@ public class BoardTests
 
     rs = (false == board.isGoal());
 
-    StdOut.printf("... %s\n", (rs == true ? "OK" : "Failed :("));
-    return (rs == true ? 0 : -1);
+    return printTestFinish(rs);
   }
 
   public static void main(String[] args)
