@@ -4,6 +4,7 @@ import edu.princeton.cs.algs4.StdOut;
 public class BoardTests
 {
   /* [ HELPFUL METHODS ] */
+
   private static int printTestFinish(boolean rs)
   {
     StdOut.printf("... %s\n", (rs == true ? "OK" : "Failed :("));
@@ -14,6 +15,21 @@ public class BoardTests
   {
     StdOut.printf("test function '%s' %s",
                   tname, (verbose ? "... \n" : ""));
+  }
+
+  /**
+  * Clones the provided array
+  *
+  * @param src
+  * @return a new clone of the provided array
+  */
+  public static int[][] cloneArray(int[][] src) {
+    int length = src.length;
+    int[][] target = new int[length][src[0].length];
+    for (int i = 0; i < length; i++) {
+      System.arraycopy(src[i], 0, target[i], 0, src[i].length);
+    }
+    return target;
   }
 
   /* [ TEST PRIVATE METHODS ] */
@@ -221,6 +237,93 @@ public class BoardTests
     return printTestFinish(rs);
   }
 
+  private static int testTwin(boolean verbose)
+    throws IllegalAccessException, NoSuchFieldException
+  {
+    boolean rs = true;
+    String tname = new Object(){}.getClass().getEnclosingMethod().getName();
+    printTestBegin(tname, verbose);
+
+    Field f = Board.class.getDeclaredField("blocks");
+    f.setAccessible(true);
+
+    int initBlocks[][] = new int[3][3];
+    initBlocks[0][0] = 1;
+    initBlocks[0][1] = 2;
+    initBlocks[0][2] = 3;
+    initBlocks[1][0] = 4;
+    initBlocks[1][1] = 5;
+    initBlocks[1][2] = 6;
+    initBlocks[2][0] = 7;
+    initBlocks[2][1] = 8;
+    initBlocks[2][2] = 0;
+    Board board = new Board(initBlocks);
+
+    int[][] blocks = cloneArray((int[][])f.get(board));
+    /* twin manualy */
+    int t = blocks[0][0];
+    blocks[0][0] = blocks[0][1];
+    blocks[0][1] = t;
+    /* get twin board */
+    Board twin_board = board.twin();
+
+    if (verbose) {
+      StdOut.printf("origin board:\n%s\n", board.toString());
+      StdOut.printf("twin board:\n%s\n", twin_board.toString());
+    }
+
+    int[][] twin_blocks = (int[][])f.get(twin_board);
+    /* compare */
+    for (int i = 0; i < board.dimension(); i++) {
+      for (int j = 0; j < board.dimension(); j++) {
+        if (twin_blocks[i][j] != blocks[i][j]) {
+          rs = false;
+          return printTestFinish(rs);
+        }
+      }
+    }
+
+    /* check 2 */
+
+    initBlocks[0][0] = 1;
+    initBlocks[0][1] = 0;
+    initBlocks[0][2] = 3;
+    initBlocks[1][0] = 4;
+    initBlocks[1][1] = 5;
+    initBlocks[1][2] = 6;
+    initBlocks[2][0] = 7;
+    initBlocks[2][1] = 8;
+    initBlocks[2][2] = 2;
+
+    board = new Board(initBlocks);
+    blocks = cloneArray((int[][])f.get(board));
+
+    /* twin manualy */
+    t = blocks[0][0];
+    blocks[0][0] = blocks[0][2];
+    blocks[0][2] = t;
+    /* get twin board */
+    twin_board = board.twin();
+
+    if (verbose) {
+      StdOut.printf("origin board:\n%s\n", board.toString());
+      StdOut.printf("twin board:\n%s\n", twin_board.toString());
+    }
+
+    twin_blocks = (int[][])f.get(twin_board);
+    /* compare */
+    for (int i = 0; i < board.dimension(); i++) {
+      for (int j = 0; j < board.dimension(); j++) {
+        if (twin_blocks[i][j] != blocks[i][j]) {
+          rs = false;
+          return printTestFinish(rs);
+        }
+      }
+    }
+
+    return printTestFinish(rs);
+  }
+
   public static void main(String[] args)
     throws Exception
   {
@@ -228,7 +331,8 @@ public class BoardTests
     testGetBlockNumber(false);
     testHamming(false);
     testManhattan(false);
-    testIsGoal(true);
+    testIsGoal(false);
+    testTwin(true);
 
   }
 }

@@ -1,4 +1,4 @@
-// import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdOut;
 
 public class Board
 {
@@ -13,9 +13,22 @@ public class Board
     size = blocks[0].length;
   }
 
-
-
   /* [ PRIVATE METHODS ] */
+
+  /**
+  * Clones the provided array
+  *
+  * @param src
+  * @return a new clone of the provided array
+  */
+  public static int[][] cloneArray(int[][] src) {
+    int length = src.length;
+    int[][] target = new int[length][src[0].length];
+    for (int i = 0; i < length; i++) {
+      System.arraycopy(src[i], 0, target[i], 0, src[i].length);
+    }
+    return target;
+  }
 
   private int getBlockNumber(int i, int j)
   {
@@ -81,13 +94,42 @@ public class Board
           return false;
       }
     }
-    return (0 == blocks[size - 1][size - 1]);
+    return (0 == blocks[size-1][size-1]);
   }
 
   // a board that is obtained by exchanging any pair of blocks
   public Board twin()
   {
-    return new Board(blocks);
+    int[] v1 = null;
+    int[] v2 = null;
+    for (int i = 0; i < size; ++i) {
+      for (int j = 0; j < size; ++j) {
+        if (blocks[i][j] != 0) {
+          if (v1 == null) {
+            v1 = new int[2];
+            v1[0] = i;
+            v1[1] = j;
+          }
+          else {
+            v2 = new int[2];
+            v2[0] = i;
+            v2[1] = j;
+
+            /* make a twin board */
+            int[][] twinBlocks = cloneArray(blocks);
+            int t = twinBlocks[v1[0]][v1[1]];
+            twinBlocks[v1[0]][v1[1]] = twinBlocks[v2[0]][v2[1]];
+            twinBlocks[v2[0]][v2[1]] = t;
+
+            Board twin_board = new Board(twinBlocks);
+            return twin_board;
+          }
+        }
+      }
+    }
+
+    assert true : "twin() failed";
+    return null;
   }
 
   // does this board equal y?
