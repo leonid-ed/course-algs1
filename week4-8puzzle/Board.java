@@ -9,7 +9,7 @@ public class Board
   // (where blocks[i][j] = block in row i, column j)
   public Board(int[][] initBlocks)
   {
-    blocks = initBlocks.clone();
+    blocks = cloneArray(initBlocks);
     size = blocks[0].length;
   }
 
@@ -133,8 +133,22 @@ public class Board
   }
 
   // does this board equal y?
-  public boolean equals(Object y)
+  public boolean equals(Object other)
   {
+    if (other == this) return true;
+    if (other == null) return false;
+    if (other.getClass() != this.getClass()) return false;
+
+    Board that = (Board)other;
+    if (this.size != that.size) return false;
+
+    for (int i = 0; i < size; ++i) {
+      for (int j = 0; j < size; ++j) {
+        if (this.blocks[i][j] != that.blocks[i][j])
+          return false;
+      }
+    }
+
     return true;
   }
 

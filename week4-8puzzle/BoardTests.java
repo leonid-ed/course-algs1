@@ -324,6 +324,55 @@ public class BoardTests
     return printTestFinish(rs);
   }
 
+  private static int testEquals(boolean verbose)
+  {
+    boolean rs = true;
+    String tname = new Object(){}.getClass().getEnclosingMethod().getName();
+    printTestBegin(tname, verbose);
+
+    int initBlocks[][] = new int[3][3];
+    initBlocks[0][0] = 1;
+    initBlocks[0][1] = 2;
+    initBlocks[0][2] = 3;
+    initBlocks[1][0] = 4;
+    initBlocks[1][1] = 5;
+    initBlocks[1][2] = 6;
+    initBlocks[2][0] = 7;
+    initBlocks[2][1] = 8;
+    initBlocks[2][2] = 0;
+    Board board1 = new Board(initBlocks);
+
+    /* not equal board */
+    initBlocks[2][1] = 0;
+    initBlocks[2][2] = 8;
+    Board board2 = new Board(initBlocks);
+
+    rs = (false == board1.equals(board2));
+
+    if (verbose) {
+      StdOut.printf("board1:\n%s\n", board1.toString());
+      StdOut.printf("board2:\n%s\n", board2.toString());
+      StdOut.printf("board1.equals(board2) = %b\n", board1.equals(board2));
+    }
+
+    if (!rs) return printTestFinish(rs);
+
+    /* equal board */
+    initBlocks[2][1] = 8;
+    initBlocks[2][2] = 0;
+    board2 = new Board(initBlocks);
+
+    rs = (true == board1.equals(board2));
+
+    if (verbose) {
+      StdOut.printf("board1:\n%s\n", board1.toString());
+      StdOut.printf("board2:\n%s\n", board2.toString());
+      StdOut.printf("board1.equals(board2) = %b\n", board1.equals(board2));
+    }
+
+    return printTestFinish(rs);
+  }
+
   public static void main(String[] args)
     throws Exception
   {
@@ -332,7 +381,7 @@ public class BoardTests
     testHamming(false);
     testManhattan(false);
     testIsGoal(false);
-    testTwin(true);
-
+    testTwin(false);
+    testEquals(true);
   }
 }
