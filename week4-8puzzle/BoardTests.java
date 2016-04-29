@@ -10,6 +10,12 @@ public class BoardTests
     return (rs == true ? 0 : -1);
   }
 
+  private static void printTestBegin(String tname, boolean verbose)
+  {
+    StdOut.printf("test function '%s' %s",
+                  tname, (verbose ? "... \n" : ""));
+  }
+
   /* [ TEST PRIVATE METHODS ] */
 
   private static int testGetBlockNumberXY(boolean verbose)
@@ -18,8 +24,7 @@ public class BoardTests
   {
     boolean rs = true;
     String tname = new Object(){}.getClass().getEnclosingMethod().getName();
-    StdOut.printf("test function '%s' %s",
-                  tname, (verbose ? "... \n" : ""));
+    printTestBegin(tname, verbose);
 
     Method methGetBlockNumberXY =
       Board.class.getDeclaredMethod("getBlockNumberXY", int.class, int[].class);
@@ -57,8 +62,7 @@ public class BoardTests
   {
     boolean rs = true;
     String tname = new Object(){}.getClass().getEnclosingMethod().getName();
-    StdOut.printf("test function '%s' %s",
-                  tname, (verbose ? "... \n" : ""));
+    printTestBegin(tname, verbose);
 
     Method methGetBlockNumber =
       Board.class.getDeclaredMethod("getBlockNumber",  int.class, int.class);
@@ -96,8 +100,7 @@ public class BoardTests
   {
     boolean rs = true;
     String tname = new Object(){}.getClass().getEnclosingMethod().getName();
-    StdOut.printf("test function '%s' %s",
-                  tname, (verbose ? "... \n" : ""));
+    printTestBegin(tname, verbose);
 
     int initBlocks[][] = new int[3][3];
     initBlocks[0][0] = 8;
@@ -126,8 +129,7 @@ public class BoardTests
   {
     boolean rs = true;
     String tname = new Object(){}.getClass().getEnclosingMethod().getName();
-    StdOut.printf("test function '%s' %s",
-                  tname, (verbose ? "... \n" : ""));
+    printTestBegin(tname, verbose);
 
     int initBlocks[][] = new int[3][3];
     initBlocks[0][0] = 8;
@@ -156,8 +158,7 @@ public class BoardTests
   {
     boolean rs = true;
     String tname = new Object(){}.getClass().getEnclosingMethod().getName();
-    StdOut.printf("test function '%s' %s",
-                  tname, (verbose ? "... \n" : ""));
+    printTestBegin(tname, verbose);
 
     int initBlocks[][] = new int[3][3];
     /* it is not a goal board */
