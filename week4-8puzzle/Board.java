@@ -75,7 +75,13 @@ public class Board
   // is this board the goal board?
   public boolean isGoal()
   {
-    return true;
+    for (int i = 0; i < size; ++i) {
+      for (int j = 0; j < size-1; ++j) {
+        if (blocks[i][j] != getBlockNumber(i, j))
+          return false;
+      }
+    }
+    return (0 == blocks[size - 1][size - 1]);
   }
 
   // a board that is obtained by exchanging any pair of blocks

@@ -148,13 +148,44 @@ public class BoardTests
     return (rs == true ? 0 : -1);
   }
 
+  private static int testIsGoal(boolean verbose)
+  {
+    boolean rs = true;
+    String tname = new Object(){}.getClass().getEnclosingMethod().getName();
+    StdOut.printf("test function '%s' %s",
+                  tname, (verbose ? "... \n" : ""));
+
+    int initBlocks[][] = new int[3][3];
+    initBlocks[0][0] = 8;
+    initBlocks[0][1] = 1;
+    initBlocks[0][2] = 3;
+    initBlocks[1][0] = 4;
+    initBlocks[1][1] = 0;
+    initBlocks[1][2] = 2;
+    initBlocks[2][0] = 7;
+    initBlocks[2][1] = 6;
+    initBlocks[2][2] = 5;
+    Board board = new Board(initBlocks);
+
+    if (verbose) {
+      StdOut.printf("%s\n", board.toString());
+      StdOut.printf("board.isGoal() = %b\n", board.isGoal());
+    }
+
+    rs = (false == board.isGoal());
+
+    StdOut.printf("... %s\n", (rs == true ? "OK" : "Failed :("));
+    return (rs == true ? 0 : -1);
+  }
+
   public static void main(String[] args)
     throws Exception
   {
     testGetBlockNumberXY(false);
     testGetBlockNumber(false);
     testHamming(false);
-    testManhattan(true);
+    testManhattan(false);
+    testIsGoal(true);
 
   }
 }
