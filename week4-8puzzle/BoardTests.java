@@ -160,6 +160,7 @@ public class BoardTests
                   tname, (verbose ? "... \n" : ""));
 
     int initBlocks[][] = new int[3][3];
+    /* it is not a goal board */
     initBlocks[0][0] = 8;
     initBlocks[0][1] = 1;
     initBlocks[0][2] = 3;
@@ -177,6 +178,44 @@ public class BoardTests
     }
 
     rs = (false == board.isGoal());
+    if (!rs) return printTestFinish(rs);
+
+    /* it is a goal board */
+    initBlocks[0][0] = 1;
+    initBlocks[0][1] = 2;
+    initBlocks[0][2] = 3;
+    initBlocks[1][0] = 4;
+    initBlocks[1][1] = 5;
+    initBlocks[1][2] = 6;
+    initBlocks[2][0] = 7;
+    initBlocks[2][1] = 8;
+    initBlocks[2][2] = 0;
+    board = new Board(initBlocks);
+
+    if (verbose) {
+      StdOut.printf("%s\n", board.toString());
+      StdOut.printf("board.isGoal() = %b\n", board.isGoal());
+    }
+
+    rs = (true == board.isGoal());
+    if (!rs) printTestFinish(rs);
+
+    /* it is not a goal board */
+    initBlocks[0][0] = 1;
+    initBlocks[0][1] = 2;
+    initBlocks[0][2] = 3;
+    initBlocks[1][0] = 4;
+    initBlocks[1][1] = 5;
+    initBlocks[1][2] = 6;
+    initBlocks[2][0] = 7;
+    initBlocks[2][1] = 8;
+    initBlocks[2][2] = 9;
+    board = new Board(initBlocks);
+
+    if (verbose) {
+      StdOut.printf("%s\n", board.toString());
+      StdOut.printf("board.isGoal() = %b\n", board.isGoal());
+    }
 
     return printTestFinish(rs);
   }
