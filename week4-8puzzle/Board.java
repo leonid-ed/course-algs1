@@ -1,9 +1,11 @@
+import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.StdOut;
 
 public class Board
 {
   private final int[][] blocks;
   private final int size;
+  private int[] emptyBlock;
 
   // construct a board from an N-by-N array of blocks
   // (where blocks[i][j] = block in row i, column j)
@@ -11,6 +13,22 @@ public class Board
   {
     blocks = cloneArray(initBlocks);
     size = blocks[0].length;
+    emptyBlock = null;
+
+    emptyBlockLoop:
+    for (int i = 0; i < size; ++i) {
+      for (int j = 0; j < size; ++j) {
+        if (blocks[i][j] == 0) {
+          emptyBlock = new int[2];
+          emptyBlock[0] = i;
+          emptyBlock[1] = j;
+          break emptyBlockLoop;
+        }
+      }
+    }
+
+    assert emptyBlock != null : "emptyBlock == null";
+
   }
 
   /* [ PRIVATE METHODS ] */
@@ -28,6 +46,19 @@ public class Board
       System.arraycopy(src[i], 0, target[i], 0, src[i].length);
     }
     return target;
+  }
+
+  private static void exchangeBlocks(
+    int[][] blocks, int i1, int j1, int i2, int j2
+  )
+  {
+    if (i1 > blocks.length-1 || i2 > blocks.length-1 ||
+        j1 > blocks[0].length-1 || j2 > blocks[0].length-1)
+      throw new IndexOutOfBoundsException();
+
+    int t = blocks[i1][j1];
+    blocks[i1][j1] = blocks[i2][j2];
+    blocks[i2][j2] = t;
   }
 
   private int getBlockNumber(int i, int j)
@@ -117,9 +148,7 @@ public class Board
 
             /* make a twin board */
             int[][] twinBlocks = cloneArray(blocks);
-            int t = twinBlocks[v1[0]][v1[1]];
-            twinBlocks[v1[0]][v1[1]] = twinBlocks[v2[0]][v2[1]];
-            twinBlocks[v2[0]][v2[1]] = t;
+            exchangeBlocks(twinBlocks, v1[0], v1[1], v2[0], v2[1]);
 
             Board twin_board = new Board(twinBlocks);
             return twin_board;
@@ -139,7 +168,7 @@ public class Board
     if (other == null) return false;
     if (other.getClass() != this.getClass()) return false;
 
-    Board that = (Board)other;
+    Board that = (Board) other;
     if (this.size != that.size) return false;
 
     for (int i = 0; i < size; ++i) {
@@ -155,7 +184,8 @@ public class Board
   // all neighboring boards
   public Iterable<Board> neighbors()
   {
-    return null;
+    Queue<Board> queue = new Queue<Board>();
+    return queue;
   }
 
   // string representation of this board (in the output format specified below)

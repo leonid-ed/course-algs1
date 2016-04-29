@@ -382,6 +382,6 @@ public class BoardTests
     testManhattan(false);
     testIsGoal(false);
     testTwin(false);
-    testEquals(true);
+    testEquals(false);
   }
 }
