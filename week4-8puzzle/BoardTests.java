@@ -402,7 +402,31 @@ public class BoardTests
     }
 
     rs = (2 == queue.size());
+    if (!rs) return printTestFinish(rs);
 
+    /* check 2 */
+
+    initBlocks[0][0] = 1;
+    initBlocks[0][1] = 0;
+    initBlocks[0][2] = 3;
+    initBlocks[1][0] = 4;
+    initBlocks[1][1] = 2;
+    initBlocks[1][2] = 5;
+    initBlocks[2][0] = 7;
+    initBlocks[2][1] = 8;
+    initBlocks[2][2] = 6;
+    board = new Board(initBlocks);
+    queue = (Queue<Board>)board.neighbors();
+
+    if (verbose) {
+      StdOut.printf("origin:\n%s\nneighbors:\n", board.toString());
+
+      for (Board b: queue) {
+        StdOut.printf("%s\n", b.toString());
+      }
+    }
+
+    rs = (3 == queue.size());
     return printTestFinish(rs);
   }
 
