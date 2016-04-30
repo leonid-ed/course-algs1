@@ -1,4 +1,5 @@
 import java.lang.reflect.*;
+import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.StdOut;
 
 public class BoardTests
@@ -373,6 +374,38 @@ public class BoardTests
     return printTestFinish(rs);
   }
 
+  private static int testNeighbors(boolean verbose)
+  {
+    boolean rs = true;
+    String tname = new Object(){}.getClass().getEnclosingMethod().getName();
+    printTestBegin(tname, verbose);
+
+    int initBlocks[][] = new int[3][3];
+    initBlocks[0][0] = 0;
+    initBlocks[0][1] = 1;
+    initBlocks[0][2] = 3;
+    initBlocks[1][0] = 4;
+    initBlocks[1][1] = 2;
+    initBlocks[1][2] = 5;
+    initBlocks[2][0] = 7;
+    initBlocks[2][1] = 8;
+    initBlocks[2][2] = 6;
+    Board board = new Board(initBlocks);
+    Queue<Board> queue = (Queue<Board>)board.neighbors();
+
+    if (verbose) {
+      StdOut.printf("origin:\n%s\nneighbors:\n", board.toString());
+
+      for (Board b: queue) {
+        StdOut.printf("%s\n", b.toString());
+      }
+    }
+
+    rs = (2 == queue.size());
+
+    return printTestFinish(rs);
+  }
+
   public static void main(String[] args)
     throws Exception
   {
@@ -383,5 +416,6 @@ public class BoardTests
     testIsGoal(false);
     testTwin(false);
     testEquals(false);
+    testNeighbors(true);
   }
 }

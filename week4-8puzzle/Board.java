@@ -39,7 +39,7 @@ public class Board
   * @param src
   * @return a new clone of the provided array
   */
-  public static int[][] cloneArray(int[][] src) {
+  private static  int[][] cloneArray(int[][] src) {
     int length = src.length;
     int[][] target = new int[length][src[0].length];
     for (int i = 0; i < length; i++) {
@@ -59,6 +59,71 @@ public class Board
     int t = blocks[i1][j1];
     blocks[i1][j1] = blocks[i2][j2];
     blocks[i2][j2] = t;
+  }
+
+  private void exchangeBlocks(int i1, int j1, int i2, int j2)
+  {
+    exchangeBlocks(blocks, i1, j1, i2, j2);
+    if (blocks[i1][j1] == 0) {
+      emptyBlock[0] = i1;
+      emptyBlock[1] = j1;
+    }
+    else if (blocks[i2][j2] == 0) {
+      emptyBlock[0] = i2;
+      emptyBlock[1] = j2;
+    }
+  }
+
+  private boolean emptyIsTop()
+  {
+    return (emptyBlock[0] == 0);
+  }
+
+  private boolean emptyIsBottom()
+  {
+    return (emptyBlock[0] == size-1);
+  }
+
+  private boolean emptyIsLeft()
+  {
+    return (emptyBlock[1] == 0);
+  }
+
+  private boolean emptyIsRight()
+  {
+    return (emptyBlock[1] == size-1);
+  }
+
+  private void emptyMoveDown()
+  {
+    if (emptyIsBottom())
+      throw new IllegalStateException();
+
+    exchangeBlocks(emptyBlock[0],emptyBlock[1], emptyBlock[0]+1,emptyBlock[1]);
+  }
+
+  private void emptyMoveUp()
+  {
+    if (emptyIsTop())
+      throw new IllegalStateException();
+
+    exchangeBlocks(emptyBlock[0],emptyBlock[1], emptyBlock[0]-1,emptyBlock[1]);
+  }
+
+  private void emptyMoveLeft()
+  {
+    if (emptyIsLeft())
+      throw new IllegalStateException();
+
+    exchangeBlocks(emptyBlock[0],emptyBlock[1], emptyBlock[0],emptyBlock[1]-1);
+  }
+
+  private void emptyMoveRight()
+  {
+    if (emptyIsRight())
+      throw new IllegalStateException();
+
+    exchangeBlocks(emptyBlock[0],emptyBlock[1], emptyBlock[0],emptyBlock[1]+1);
   }
 
   private int getBlockNumber(int i, int j)
@@ -185,6 +250,31 @@ public class Board
   public Iterable<Board> neighbors()
   {
     Queue<Board> queue = new Queue<Board>();
+
+    if (!emptyIsTop()) {
+      Board board = new Board(blocks);
+      board.emptyMoveUp();
+      queue.enqueue(board);
+    }
+
+    if (!emptyIsRight()) {
+      Board board = new Board(blocks);
+      board.emptyMoveRight();
+      queue.enqueue(board);
+    }
+
+    if (!emptyIsBottom()) {
+      Board board = new Board(blocks);
+      board.emptyMoveDown();
+      queue.enqueue(board);
+    }
+
+    if (!emptyIsLeft()) {
+      Board board = new Board(blocks);
+      board.emptyMoveLeft();
+      queue.enqueue(board);
+    }
+
     return queue;
   }
 
