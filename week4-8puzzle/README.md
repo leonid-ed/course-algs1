@@ -7,3 +7,4 @@
 ## TODO List
 
 * implement class Solver
+  * an additional class is necessary?
