@@ -1,29 +1,79 @@
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.MinPQ;
+import edu.princeton.cs.algs4.Queue;
 
 public class Solver
 {
+  private class Case implements Comparable<Case> {
+    public final int move;
+    public final int priority;
+    public final Board board;
+    public final Board prevBoard;
+
+    public Case(int initMove, Board initBoard, Board initPrevBoard)
+    {
+      move = initMove;
+      board = initBoard;
+      prevBoard = initPrevBoard;
+      int manh = board.manhattan();
+      priority = manh + move;
+    }
+
+    public int compareTo(Case that)
+    {
+      if (priority == that.priority)
+        return 0;
+
+      if (priority > that.priority)
+        return 1;
+      else
+        return -1;
+    }
+  };
+
+  private int move;
+  private MinPQ<Case> pq;
+
   // find a solution to the initial board (using the A* algorithm)
   public Solver(Board initial)
   {
+    move = 0;
+    Case c = new Case(move, initial, null);
+    pq = new MinPQ<Case>();
+  }
+
+  private void compute()
+  {
+
+    ++move;
 
   }
 
   // is the initial board solvable?
   public boolean isSolvable()
   {
-    return false;
+    return (-1 == move ? false : true);
   }
 
   // min number of moves to solve initial board; -1 if unsolvable
   public int moves()
   {
-    return 0;
+    return move;
   }
 
   // sequence of boards in a shortest solution; null if unsolvable
   public Iterable<Board> solution()
   {
+    if (isSolvable()) {
+      Queue<Board> queue = new Queue<Board>();
+      for (Case c : pq) {
+        Board board = c.board;
+        queue.enqueue(board);
+        if (board.isGoal())
+          return queue;
+      }
+    }
     return null;
   }
 
