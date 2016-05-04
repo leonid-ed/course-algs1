@@ -7,12 +7,16 @@
 ## TODO List
 
 * implement class Solver
-  * an additional class is necessary? (class Case)
+  * ~~an additional class is necessary? (class Case)~~
   * figure out how to detect unsolvable cases
 
 ## Notes
 
-Solver works on example puzzle04.txt:
+Solver works on example puzzle01.txt to puzzle15.txt:
 ```sh
-$ java-algs4 Solver puzzle04.txt
+$ java-algs4 Solver puzzle00.txt
+...
+$ java-algs4 Solver puzzle15.txt
 ```
+
+it has problem on puzzle16.txt and so on (false "No solution possible").

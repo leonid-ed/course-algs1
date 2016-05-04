@@ -6,13 +6,15 @@ import edu.princeton.cs.algs4.Queue;
 public class Solver
 {
   private class Case implements Comparable<Case> {
+    public final int num;
     public final int move;
     public final int priority;
     public final Board board;
     public final Board prevBoard;
 
-    public Case(int initMove, Board initBoard, Board initPrevBoard)
+    public Case(int initNum, int initMove, Board initBoard, Board initPrevBoard)
     {
+      num = initNum;
       move = initMove;
       board = initBoard;
       prevBoard = initPrevBoard;
@@ -20,12 +22,13 @@ public class Solver
       priority = manh + move;
     }
 
-    public Iterable<Case> neighbors(int initMove)
+    public Iterable<Case> neighbors()
     {
       Queue<Case> queue = new Queue<Case>();
+      int caseCounter = 0;
       for (Board b: board.neighbors()) {
         if (b.equals(prevBoard)) continue;
-        Case c = new Case(initMove, b, board);
+        Case c = new Case(caseCounter++, move+1, b, board);
         queue.enqueue(c);
       }
       return queue;
@@ -33,8 +36,16 @@ public class Solver
 
     public int compareTo(Case that)
     {
-      if (priority == that.priority)
-        return 0;
+      if (priority == that.priority) {
+        if (num == that.num)
+          return 0;
+        else if (num > that.num) {
+          return 1;
+        }
+        else {
+          return -1;
+        }
+      }
 
       if (priority > that.priority)
         return 1;
@@ -52,7 +63,7 @@ public class Solver
   {
     move = 0;
     caseQueue = new Queue<Case>();
-    Case c = new Case(move, initial, null);
+    Case c = new Case(0, move, initial, null);
     pq = new MinPQ<Case>();
     pq.insert(c);
     compute();
@@ -60,19 +71,38 @@ public class Solver
 
   private void compute()
   {
+    int startPriority = -1;
     while(true) {
       Case c = pq.delMin();
-      StdOut.printf("move: %d, priority: %d\n%s\n",
-        c.move, c.priority, c.board.toString());
+      if (startPriority == -1)
+        startPriority = c.priority;
+      else {
+        if (startPriority < c.priority) {
+          move = -1;
+          caseQueue = new Queue<Case>();
+          return;
+        }
+      }
+      // StdOut.printf("move: %d, priority: %d\n%s\n",
+      // c.move, c.priority, c.board.toString());
 
       caseQueue.enqueue(c);
-      if (c.board.isGoal())
+      if (c.board.isGoal()) {
+        move = c.move;
         return;
+      }
 
-      ++move;
-      for (Case c1 : c.neighbors(move)) {
+      // ++move;
+      for (Case c1 : c.neighbors()) {
         pq.insert(c1);
       }
+
+      // try {
+      //   System.in.read();
+      // }
+      // catch (java.io.IOException e) {
+      //   ;
+      // }
     }
   }
 
