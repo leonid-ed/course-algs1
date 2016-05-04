@@ -20,6 +20,17 @@ public class Solver
       priority = manh + move;
     }
 
+    public Iterable<Case> neighbors(int initMove)
+    {
+      Queue<Case> queue = new Queue<Case>();
+      for (Board b: board.neighbors()) {
+        if (b.equals(prevBoard)) continue;
+        Case c = new Case(initMove, b, board);
+        queue.enqueue(c);
+      }
+      return queue;
+    }
+
     public int compareTo(Case that)
     {
       if (priority == that.priority)
@@ -34,20 +45,35 @@ public class Solver
 
   private int move;
   private MinPQ<Case> pq;
+  private Queue<Case> caseQueue;
 
   // find a solution to the initial board (using the A* algorithm)
   public Solver(Board initial)
   {
     move = 0;
+    caseQueue = new Queue<Case>();
     Case c = new Case(move, initial, null);
     pq = new MinPQ<Case>();
+    pq.insert(c);
+    compute();
   }
 
   private void compute()
   {
+    while(true) {
+      Case c = pq.delMin();
+      StdOut.printf("move: %d, priority: %d\n%s\n",
+        c.move, c.priority, c.board.toString());
 
-    ++move;
+      caseQueue.enqueue(c);
+      if (c.board.isGoal())
+        return;
 
+      ++move;
+      for (Case c1 : c.neighbors(move)) {
+        pq.insert(c1);
+      }
+    }
   }
 
   // is the initial board solvable?
@@ -67,7 +93,7 @@ public class Solver
   {
     if (isSolvable()) {
       Queue<Board> queue = new Queue<Board>();
-      for (Case c : pq) {
+      for (Case c : caseQueue) {
         Board board = c.board;
         queue.enqueue(board);
         if (board.isGoal())

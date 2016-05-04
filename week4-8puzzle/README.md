@@ -7,4 +7,12 @@
 ## TODO List
 
 * implement class Solver
-  * an additional class is necessary?
+  * an additional class is necessary? (class Case)
+  * figure out how to detect unsolvable cases
+
+## Notes
+
+Solver works on example puzzle04.txt:
+```sh
+$ java-algs4 Solver puzzle04.txt
+```
