@@ -8,10 +8,10 @@ SUBMIT_NAME = 8puzzle
 Board: Board.java
 	javac-algs4 $<
 
-Solver: Solver.java
+Solver: Solver.java Board
 	javac-algs4 $<
 
-PuzzleChecker: PuzzleChecker.java
+PuzzleChecker: PuzzleChecker.java Solver
 	javac-algs4 $<
 
 BoardTests: BoardTests.java Board
