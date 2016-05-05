@@ -9,6 +9,8 @@ public class Solver
     public final int num;
     public final int move;
     public final int priority;
+    public final int hamm;
+    public final int manh;
     public final Board board;
     public final Board prevBoard;
 
@@ -18,7 +20,8 @@ public class Solver
       move = initMove;
       board = initBoard;
       prevBoard = initPrevBoard;
-      int manh = board.manhattan();
+      manh = board.manhattan();
+      hamm = board.hamming();
       priority = manh + move;
     }
 
@@ -74,17 +77,22 @@ public class Solver
     int startPriority = -1;
     while(true) {
       Case c = pq.delMin();
-      if (startPriority == -1)
-        startPriority = c.priority;
-      else {
-        if (startPriority < c.priority) {
-          move = -1;
-          caseQueue = new Queue<Case>();
-          return;
-        }
-      }
+
+      /* debug output */
       // StdOut.printf("move: %d, priority: %d\n%s\n",
-      // c.move, c.priority, c.board.toString());
+      //               c.move, c.priority, c.board.toString());
+
+      /* detect unsolved case */
+      // if (startPriority == -1)
+      //   startPriority = c.priority;
+      // else {
+      //   if (startPriority < c.priority) {
+      //     move = -1;
+      //     caseQueue = new Queue<Case>();
+      //     return;
+      //   }
+      //   startPriority = c.priority;
+      // }
 
       caseQueue.enqueue(c);
       if (c.board.isGoal()) {
