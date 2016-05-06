@@ -440,6 +440,6 @@ public class BoardTests
     testIsGoal(false);
     testTwin(false);
     testEquals(false);
-    testNeighbors(true);
+    testNeighbors(false);
   }
 }

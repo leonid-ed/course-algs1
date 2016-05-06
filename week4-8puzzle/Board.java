@@ -185,7 +185,8 @@ public class Board
   public boolean isGoal()
   {
     for (int i = 0; i < size; ++i) {
-      for (int j = 0; j < size-1; ++j) {
+      for (int j = 0; j < size; ++j) {
+        if (i == size-1 && j == size-1) break;
         if (blocks[i][j] != getBlockNumber(i, j))
           return false;
       }
