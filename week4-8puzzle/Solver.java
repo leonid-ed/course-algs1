@@ -40,17 +40,24 @@ public class Solver
     public int compareTo(Case that)
     {
       if (priority == that.priority) {
-        if (num == that.num)
-          return 0;
-        else if (num > that.num) {
-          return 1;
+        // if (move == that.move) {
+          if (num == that.num)
+            return 0;
+          else if (num > that.num) {
+            return 1;
+          }
+          else {
+            return -1;
+          }
         }
-        else {
-          return -1;
-        }
-      }
-
-      if (priority > that.priority)
+        // else if (move > that.move) {
+        //   return 1;
+        // }
+        // else {
+        //   return -1;
+        // }
+      // }
+      else if (priority > that.priority)
         return 1;
       else
         return -1;
@@ -79,8 +86,8 @@ public class Solver
       Case c = pq.delMin();
 
       /* debug output */
-      // StdOut.printf("move: %d, priority: %d\n%s\n",
-      //               c.move, c.priority, c.board.toString());
+      // StdOut.printf("move: %d\nmanhattan: %d\npriority: %d\n%s\n",
+      //               c.move, c.manh, c.priority, c.board.toString());
 
       /* detect unsolved case */
       // if (startPriority == -1)

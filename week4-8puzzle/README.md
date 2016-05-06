@@ -8,6 +8,7 @@
 
 * implement class Solver
   * ~~an additional class is necessary? (class Case)~~
+  * figure out how to print out result sequence of boards
   * figure out how to detect unsolvable cases
 
 ## Notes
