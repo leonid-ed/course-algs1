@@ -3,23 +3,23 @@ import edu.princeton.cs.algs4.StdOut;
 
 public class Board
 {
-  private final int[][] blocks;
-  private final int size;
-  private int[] emptyBlock;
+  private final byte[][] blocks;
+  private final byte size;
+  private byte[] emptyBlock;
 
   // construct a board from an N-by-N array of blocks
   // (where blocks[i][j] = block in row i, column j)
   public Board(int[][] initBlocks)
   {
     blocks = cloneArray(initBlocks);
-    size = blocks[0].length;
+    size = (byte)blocks[0].length;
     emptyBlock = null;
 
     emptyBlockLoop:
-    for (int i = 0; i < size; ++i) {
-      for (int j = 0; j < size; ++j) {
+    for (byte i = 0; i < size; ++i) {
+      for (byte j = 0; j < size; ++j) {
         if (blocks[i][j] == 0) {
-          emptyBlock = new int[2];
+          emptyBlock = new byte[2];
           emptyBlock[0] = i;
           emptyBlock[1] = j;
           break emptyBlockLoop;
@@ -39,29 +39,48 @@ public class Board
   * @param src
   * @return a new clone of the provided array
   */
-  private static  int[][] cloneArray(int[][] src) {
+  private static  byte[][] cloneArray(int[][] src) {
+    byte length = (byte) src.length;
+    byte[][] target = new byte[length][src[0].length];
+    for (byte i = 0; i < length; i++) {
+      for (byte j = 0; j < length; j++) {
+        target[i][j] = (byte) src[i][j];
+      }
+    }
+    return target;
+  }
+  private static  int[][] cloneArray(byte[][] src) {
     int length = src.length;
     int[][] target = new int[length][src[0].length];
     for (int i = 0; i < length; i++) {
-      System.arraycopy(src[i], 0, target[i], 0, src[i].length);
+      for (int j = 0; j < length; j++) {
+        target[i][j] = src[i][j];
+      }
     }
     return target;
   }
 
   private static void exchangeBlocks(
-    int[][] blocks, int i1, int j1, int i2, int j2
+    byte[][] blocks, byte i1, byte j1, byte i2, byte j2
   )
   {
     if (i1 > blocks.length-1 || i2 > blocks.length-1 ||
         j1 > blocks[0].length-1 || j2 > blocks[0].length-1)
       throw new IndexOutOfBoundsException();
 
-    int t = blocks[i1][j1];
+    byte t = blocks[i1][j1];
     blocks[i1][j1] = blocks[i2][j2];
     blocks[i2][j2] = t;
   }
 
-  private void exchangeBlocks(int i1, int j1, int i2, int j2)
+  private Board cloneBoard()
+  {
+    int[][] initBlocks = cloneArray(blocks);
+    Board newBoard = new Board(initBlocks);
+    return newBoard;
+  }
+
+  private void exchangeBlocks(byte i1, byte j1, byte i2, byte j2)
   {
     exchangeBlocks(blocks, i1, j1, i2, j2);
     if (blocks[i1][j1] == 0) {
@@ -99,7 +118,7 @@ public class Board
     if (emptyIsBottom())
       throw new IllegalStateException();
 
-    exchangeBlocks(emptyBlock[0],emptyBlock[1], emptyBlock[0]+1,emptyBlock[1]);
+    exchangeBlocks(emptyBlock[0],emptyBlock[1], (byte)(emptyBlock[0]+1),emptyBlock[1]);
   }
 
   private void emptyMoveUp()
@@ -107,7 +126,7 @@ public class Board
     if (emptyIsTop())
       throw new IllegalStateException();
 
-    exchangeBlocks(emptyBlock[0],emptyBlock[1], emptyBlock[0]-1,emptyBlock[1]);
+    exchangeBlocks(emptyBlock[0],emptyBlock[1], (byte)(emptyBlock[0]-1),emptyBlock[1]);
   }
 
   private void emptyMoveLeft()
@@ -115,7 +134,7 @@ public class Board
     if (emptyIsLeft())
       throw new IllegalStateException();
 
-    exchangeBlocks(emptyBlock[0],emptyBlock[1], emptyBlock[0],emptyBlock[1]-1);
+    exchangeBlocks(emptyBlock[0],emptyBlock[1], emptyBlock[0], (byte)(emptyBlock[1]-1));
   }
 
   private void emptyMoveRight()
@@ -123,19 +142,19 @@ public class Board
     if (emptyIsRight())
       throw new IllegalStateException();
 
-    exchangeBlocks(emptyBlock[0],emptyBlock[1], emptyBlock[0],emptyBlock[1]+1);
+    exchangeBlocks(emptyBlock[0],emptyBlock[1], emptyBlock[0], (byte)(emptyBlock[1]+1));
   }
 
-  private int getBlockNumber(int i, int j)
+  private int getBlockNumber(byte i, byte j)
   {
     return size * i + j + 1;
   }
 
-  private int getBlockNumberXY(int num, int[] vals)
+  private int getBlockNumberXY(byte num, byte[] vals)
   {
     int m = num % size;
-    vals[0] = num / size + (m > 0 ? 1 : 0);
-    vals[1] = (m == 0 ? size : m);
+    vals[0] = (byte)(num / size + (m > 0 ? 1 : 0));
+    vals[1] = (byte)((m == 0 ? size : m));
     return 0;
   }
 
@@ -151,8 +170,8 @@ public class Board
   public int hamming()
   {
     int rs = 0;
-    for (int i = 0; i < size; ++i) {
-      for (int j = 0; j < size; ++j) {
+    for (byte i = 0; i < size; ++i) {
+      for (byte j = 0; j < size; ++j) {
         if (blocks[i][j] == 0) continue;
         if (blocks[i][j] != getBlockNumber(i, j))
           ++rs;
@@ -165,15 +184,15 @@ public class Board
   public int manhattan()
   {
     int rs = 0;
-    int[] v1 = new int[2];
-    int[] v2 = new int[2];
+    byte[] v1 = new byte[2];
+    byte[] v2 = new byte[2];
 
-    for (int i = 0; i < size; ++i) {
-      for (int j = 0; j < size; ++j) {
+    for (byte i = 0; i < size; ++i) {
+      for (byte j = 0; j < size; ++j) {
         if (blocks[i][j] == 0) continue;
 
-        v1[0] = i + 1;
-        v1[1] = j + 1;
+        v1[0] = (byte)(i + 1);
+        v1[1] = (byte)(j + 1);
         getBlockNumberXY(blocks[i][j], v2);
         rs += Math.abs(v2[0] - v1[0]) + Math.abs(v2[1] - v1[1]);
       }
@@ -184,8 +203,8 @@ public class Board
   // is this board the goal board?
   public boolean isGoal()
   {
-    for (int i = 0; i < size; ++i) {
-      for (int j = 0; j < size; ++j) {
+    for (byte i = 0; i < size; ++i) {
+      for (byte j = 0; j < size; ++j) {
         if (i == size-1 && j == size-1) break;
         if (blocks[i][j] != getBlockNumber(i, j))
           return false;
@@ -197,27 +216,25 @@ public class Board
   // a board that is obtained by exchanging any pair of blocks
   public Board twin()
   {
-    int[] v1 = null;
-    int[] v2 = null;
-    for (int i = 0; i < size; ++i) {
-      for (int j = 0; j < size; ++j) {
+    byte[] v1 = null;
+    byte[] v2 = null;
+    for (byte i = 0; i < size; ++i) {
+      for (byte j = 0; j < size; ++j) {
         if (blocks[i][j] != 0) {
           if (v1 == null) {
-            v1 = new int[2];
+            v1 = new byte[2];
             v1[0] = i;
             v1[1] = j;
           }
           else {
-            v2 = new int[2];
+            v2 = new byte[2];
             v2[0] = i;
             v2[1] = j;
 
             /* make a twin board */
-            int[][] twinBlocks = cloneArray(blocks);
-            exchangeBlocks(twinBlocks, v1[0], v1[1], v2[0], v2[1]);
-
-            Board twin_board = new Board(twinBlocks);
-            return twin_board;
+            Board twinBoard = cloneBoard();
+            twinBoard.exchangeBlocks(v1[0], v1[1], v2[0], v2[1]);
+            return twinBoard;
           }
         }
       }
@@ -237,8 +254,8 @@ public class Board
     Board that = (Board) other;
     if (this.size != that.size) return false;
 
-    for (int i = 0; i < size; ++i) {
-      for (int j = 0; j < size; ++j) {
+    for (byte i = 0; i < size; ++i) {
+      for (byte j = 0; j < size; ++j) {
         if (this.blocks[i][j] != that.blocks[i][j])
           return false;
       }
@@ -253,25 +270,25 @@ public class Board
     Queue<Board> queue = new Queue<Board>();
 
     if (!emptyIsTop()) {
-      Board board = new Board(blocks);
+      Board board = cloneBoard();
       board.emptyMoveUp();
       queue.enqueue(board);
     }
 
     if (!emptyIsRight()) {
-      Board board = new Board(blocks);
+      Board board = cloneBoard();
       board.emptyMoveRight();
       queue.enqueue(board);
     }
 
     if (!emptyIsBottom()) {
-      Board board = new Board(blocks);
+      Board board = cloneBoard();
       board.emptyMoveDown();
       queue.enqueue(board);
     }
 
     if (!emptyIsLeft()) {
-      Board board = new Board(blocks);
+      Board board = cloneBoard();
       board.emptyMoveLeft();
       queue.enqueue(board);
     }
@@ -284,8 +301,8 @@ public class Board
   {
     StringBuilder s = new StringBuilder();
     s.append(size + "\n");
-    for (int i = 0; i < size; i++) {
-      for (int j = 0; j < size; j++) {
+    for (byte i = 0; i < size; i++) {
+      for (byte j = 0; j < size; j++) {
         s.append(String.format("%2d ", blocks[i][j]));
       }
       s.append("\n");
