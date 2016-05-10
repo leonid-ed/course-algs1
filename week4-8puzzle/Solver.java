@@ -105,7 +105,7 @@ public class Solver
       //   startPriority = c.priority;
       // }
 
-      pqPro.insert(c);
+      // pqPro.insert(c);
       if (c.board.isGoal()) {
         finalCase = c;
         return;
@@ -113,6 +113,8 @@ public class Solver
 
       if (debug) StdOut.printf("<-- neighbors :\n");
       for (Case c1 : c.neighbors()) {
+        // if (c1.priority > c.priority+1) continue;
+
         if (debug) {
           StdOut.printf("move: %d\nmanhattan: %d\npriority: %d\n%s\n",
                         c1.move, c1.manh, c1.priority, c1.board.toString());
