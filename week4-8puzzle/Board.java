@@ -3,7 +3,7 @@ import edu.princeton.cs.algs4.StdOut;
 
 public class Board
 {
-  private final byte[][] blocks;
+  private final byte[] blocks;
   private final byte size;
   private byte[] emptyBlock;
 
@@ -11,24 +11,33 @@ public class Board
   // (where blocks[i][j] = block in row i, column j)
   public Board(int[][] initBlocks)
   {
-    blocks = cloneArray(initBlocks);
-    size = (byte)blocks[0].length;
+    size = (byte)initBlocks[0].length;
+    blocks = new byte[ size * size ];
     emptyBlock = null;
 
     emptyBlockLoop:
     for (byte i = 0; i < size; ++i) {
       for (byte j = 0; j < size; ++j) {
-        if (blocks[i][j] == 0) {
+        blocks[getIndex(i, j)] = (byte)initBlocks[i][j];
+
+        if (blocks[getIndex(i, j)] == 0) {
+          assert emptyBlock == null : "emptyBlock is already set!";
+
           emptyBlock = new byte[2];
           emptyBlock[0] = i;
           emptyBlock[1] = j;
-          break emptyBlockLoop;
         }
       }
     }
 
     assert emptyBlock != null : "emptyBlock == null";
+  }
 
+  private Board(byte initSize)
+  {
+    size = initSize;
+    blocks = new byte[size * size];
+    emptyBlock = new byte[2];
   }
 
   /* [ PRIVATE METHODS ] */
@@ -60,34 +69,37 @@ public class Board
     return target;
   }
 
-  private static void exchangeBlocks(
-    byte[][] blocks, byte i1, byte j1, byte i2, byte j2
-  )
-  {
-    if (i1 > blocks.length-1 || i2 > blocks.length-1 ||
-        j1 > blocks[0].length-1 || j2 > blocks[0].length-1)
-      throw new IndexOutOfBoundsException();
-
-    byte t = blocks[i1][j1];
-    blocks[i1][j1] = blocks[i2][j2];
-    blocks[i2][j2] = t;
-  }
-
   private Board cloneBoard()
   {
-    int[][] initBlocks = cloneArray(blocks);
-    Board newBoard = new Board(initBlocks);
+    Board newBoard = new Board(size);
+    System.arraycopy(blocks, 0, newBoard.blocks, 0, blocks.length);
+    System.arraycopy(emptyBlock, 0, newBoard.emptyBlock, 0, emptyBlock.length);
+
     return newBoard;
+  }
+
+  private static void exchangeBlocks(byte[] blocks, int i1, int i2)
+  {
+
+    if (i1 > blocks.length-1 || i2 > blocks.length-1)
+      throw new IndexOutOfBoundsException();
+
+    byte t = blocks[i1];
+    blocks[i1] = blocks[i2];
+    blocks[i2] = t;
   }
 
   private void exchangeBlocks(byte i1, byte j1, byte i2, byte j2)
   {
-    exchangeBlocks(blocks, i1, j1, i2, j2);
-    if (blocks[i1][j1] == 0) {
+    int index1 = getIndex(i1, j1);
+    int index2 = getIndex(i2, j2);
+
+    exchangeBlocks(blocks, index1, index2);
+    if (blocks[index1] == 0) {
       emptyBlock[0] = i1;
       emptyBlock[1] = j1;
     }
-    else if (blocks[i2][j2] == 0) {
+    else if (blocks[index2] == 0) {
       emptyBlock[0] = i2;
       emptyBlock[1] = j2;
     }
@@ -158,6 +170,23 @@ public class Board
     return 0;
   }
 
+  private void getXY(int i, byte[] vals)
+  {
+    vals[0] = (byte)(i / size);
+    vals[1] = (byte)(i % size);
+  }
+
+  private int getIndex(byte[] vals)
+  {
+    return vals[0] * size + vals[1];
+  }
+
+  private int getIndex(int i, int j)
+  {
+    return i * size + j;
+  }
+
+
   /* [ PUBLIC METHODS ] */
 
   // board dimension N
@@ -172,8 +201,8 @@ public class Board
     int rs = 0;
     for (byte i = 0; i < size; ++i) {
       for (byte j = 0; j < size; ++j) {
-        if (blocks[i][j] == 0) continue;
-        if (blocks[i][j] != getBlockNumber(i, j))
+        if (blocks[getIndex(i, j)] == 0) continue;
+        if (blocks[getIndex(i, j)] != getBlockNumber(i, j))
           ++rs;
       }
     }
@@ -189,11 +218,11 @@ public class Board
 
     for (byte i = 0; i < size; ++i) {
       for (byte j = 0; j < size; ++j) {
-        if (blocks[i][j] == 0) continue;
+        if (blocks[getIndex(i, j)] == 0) continue;
 
         v1[0] = (byte)(i + 1);
         v1[1] = (byte)(j + 1);
-        getBlockNumberXY(blocks[i][j], v2);
+        getBlockNumberXY(blocks[getIndex(i, j)], v2);
         rs += Math.abs(v2[0] - v1[0]) + Math.abs(v2[1] - v1[1]);
       }
     }
@@ -203,14 +232,11 @@ public class Board
   // is this board the goal board?
   public boolean isGoal()
   {
-    for (byte i = 0; i < size; ++i) {
-      for (byte j = 0; j < size; ++j) {
-        if (i == size-1 && j == size-1) break;
-        if (blocks[i][j] != getBlockNumber(i, j))
-          return false;
-      }
+    for (int i = 0; i < size*size-1; ++i) {
+      if (blocks[i] != i + 1)
+        return false;
     }
-    return (0 == blocks[size-1][size-1]);
+    return (0 == blocks[size*size-1]);
   }
 
   // a board that is obtained by exchanging any pair of blocks
@@ -220,7 +246,7 @@ public class Board
     byte[] v2 = null;
     for (byte i = 0; i < size; ++i) {
       for (byte j = 0; j < size; ++j) {
-        if (blocks[i][j] != 0) {
+        if (blocks[getIndex(i, j)] != 0) {
           if (v1 == null) {
             v1 = new byte[2];
             v1[0] = i;
@@ -240,7 +266,7 @@ public class Board
       }
     }
 
-    assert true : "twin() failed";
+    assert false : "twin() failed!";
     return null;
   }
 
@@ -254,11 +280,9 @@ public class Board
     Board that = (Board) other;
     if (this.size != that.size) return false;
 
-    for (byte i = 0; i < size; ++i) {
-      for (byte j = 0; j < size; ++j) {
-        if (this.blocks[i][j] != that.blocks[i][j])
-          return false;
-      }
+    for (int i = 0; i < size*size; ++i) {
+      if (this.blocks[i] != that.blocks[i])
+        return false;
     }
 
     return true;
@@ -303,7 +327,7 @@ public class Board
     s.append(size + "\n");
     for (byte i = 0; i < size; i++) {
       for (byte j = 0; j < size; j++) {
-        s.append(String.format("%2d ", blocks[i][j]));
+        s.append(String.format("%2d ", blocks[getIndex(i, j)]));
       }
       s.append("\n");
     }

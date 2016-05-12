@@ -47,7 +47,17 @@ public class BoardTests
       Board.class.getDeclaredMethod("getBlockNumberXY", byte.class, byte[].class);
     methGetBlockNumberXY.setAccessible(true);
 
-    Board board = new Board(new int[3][3]);
+    int initBlocks[][] = new int[3][3];
+    initBlocks[0][0] = 8;
+    initBlocks[0][1] = 1;
+    initBlocks[0][2] = 3;
+    initBlocks[1][0] = 4;
+    initBlocks[1][1] = 0;
+    initBlocks[1][2] = 2;
+    initBlocks[2][0] = 7;
+    initBlocks[2][1] = 6;
+    initBlocks[2][2] = 5;
+    Board board = new Board(initBlocks);
     for (byte i = 1; i < 10; ++i) {
       byte[] vals = new byte[2];
       methGetBlockNumberXY.invoke(board, i, vals);
@@ -85,7 +95,17 @@ public class BoardTests
       Board.class.getDeclaredMethod("getBlockNumber",  byte.class, byte.class);
     methGetBlockNumber.setAccessible(true);
 
-    Board board = new Board(new int[3][3]);
+    int initBlocks[][] = new int[3][3];
+    initBlocks[0][0] = 8;
+    initBlocks[0][1] = 1;
+    initBlocks[0][2] = 3;
+    initBlocks[1][0] = 4;
+    initBlocks[1][1] = 0;
+    initBlocks[1][2] = 2;
+    initBlocks[2][0] = 7;
+    initBlocks[2][1] = 6;
+    initBlocks[2][2] = 5;
+    Board board = new Board(initBlocks);
     for (byte i = 0; i < board.dimension(); ++i) {
       for (byte j = 0; j < board.dimension(); ++j) {
         int v = (int)methGetBlockNumber.invoke(board, i, j);
@@ -226,8 +246,8 @@ public class BoardTests
     initBlocks[1][1] = 5;
     initBlocks[1][2] = 6;
     initBlocks[2][0] = 7;
-    initBlocks[2][1] = 8;
-    initBlocks[2][2] = 9;
+    initBlocks[2][1] = 0;
+    initBlocks[2][2] = 8;
     board = new Board(initBlocks);
 
     if (verbose) {
@@ -266,27 +286,26 @@ public class BoardTests
     methCloneBoard.setAccessible(true);
 
     Board boardCloned = (Board)methCloneBoard.invoke(board);
-    byte[][] blocks = (byte[][])f.get(boardCloned);
+    byte[] blocks = (byte[])f.get(boardCloned);
     /* twin manualy */
-    byte t = blocks[0][0];
-    blocks[0][0] = blocks[0][1];
-    blocks[0][1] = t;
+    byte t = blocks[0];
+    blocks[0] = blocks[1];
+    blocks[1] = t;
     /* get twin board */
     Board twin_board = board.twin();
+    assert twin_board != null : "twin_board == null";
 
     if (verbose) {
       StdOut.printf("origin board:\n%s\n", board.toString());
       StdOut.printf("twin board:\n%s\n", twin_board.toString());
     }
 
-    byte[][] twin_blocks = (byte[][])f.get(twin_board);
+    byte[] twin_blocks = (byte[])f.get(twin_board);
     /* compare */
-    for (byte i = 0; i < board.dimension(); i++) {
-      for (byte j = 0; j < board.dimension(); j++) {
-        if (twin_blocks[i][j] != blocks[i][j]) {
-          rs = false;
-          return printTestFinish(rs);
-        }
+    for (int i = 0; i < board.dimension()*board.dimension(); ++i) {
+      if (twin_blocks[i] != blocks[i]) {
+        rs = false;
+        return printTestFinish(rs);
       }
     }
 
@@ -305,11 +324,11 @@ public class BoardTests
     board = new Board(initBlocks);
 
     boardCloned = (Board)methCloneBoard.invoke(board);
-    blocks = (byte[][])f.get(boardCloned);
+    blocks = (byte[])f.get(boardCloned);
     /* twin manualy */
-    t = blocks[0][0];
-    blocks[0][0] = blocks[0][2];
-    blocks[0][2] = t;
+    t = blocks[0];
+    blocks[0] = blocks[2];
+    blocks[2] = t;
     /* get twin board */
     twin_board = board.twin();
 
@@ -318,14 +337,12 @@ public class BoardTests
       StdOut.printf("twin board:\n%s\n", twin_board.toString());
     }
 
-    twin_blocks = (byte[][])f.get(twin_board);
+    twin_blocks = (byte[])f.get(twin_board);
     /* compare */
-    for (byte i = 0; i < board.dimension(); i++) {
-      for (byte j = 0; j < board.dimension(); j++) {
-        if (twin_blocks[i][j] != blocks[i][j]) {
-          rs = false;
-          return printTestFinish(rs);
-        }
+    for (int i = 0; i < board.dimension()*board.dimension(); ++i) {
+      if (twin_blocks[i] != blocks[i]) {
+        rs = false;
+        break;
       }
     }
 

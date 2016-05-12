@@ -16,7 +16,7 @@ PuzzleChecker: PuzzleChecker.java Solver
 
 BoardTests: BoardTests.java Board
 	javac-algs4 BoardTests.java
-	java-algs4 BoardTests
+	java-algs4 -enableassertions BoardTests
 
 zip: $(SUBMIT_PACK)
 	zip $(SUBMIT_NAME).zip $<
