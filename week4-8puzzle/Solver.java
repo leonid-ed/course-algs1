@@ -66,8 +66,8 @@ public class Solver
   };
 
   private final boolean debug;
-  private MinPQ<Case> pqPre;
-  private MinPQ<Case> pqPro;
+  private MinPQ<Case> pq;
+  private MinPQ<Case> pqTwined;
   private Case finalCase;
 
   // find a solution to the initial board (using the A* algorithm)
@@ -75,17 +75,20 @@ public class Solver
   {
     debug = false;
     Case c = new Case(0, 0, initial, null);
-    pqPre = new MinPQ<Case>();
-    pqPre.insert(c);
-    pqPro = new MinPQ<Case>();
+    pq = new MinPQ<Case>();
+    pq.insert(c);
+
+    pqTwined = new MinPQ<Case>();
+    c = new Case(0, 0, initial.twin(), null);
+    pqTwined.insert(c);
+
     compute();
   }
 
   private void compute()
   {
-    int startPriority = -1;
     while(true) {
-      Case c = pqPre.delMin();
+      Case c = pq.delMin();
 
       if (debug) {
         StdOut.printf("step\n");
@@ -93,19 +96,6 @@ public class Solver
                       c.move, c.manh, c.priority, c.board.toString());
       }
 
-      /* detect unsolved case */
-      // if (startPriority == -1)
-      //   startPriority = c.priority;
-      // else {
-      //   if (startPriority < c.priority) {
-      //     move = -1;
-      //     caseQueue = new Queue<Case>();
-      //     return;
-      //   }
-      //   startPriority = c.priority;
-      // }
-
-      // pqPro.insert(c);
       if (c.board.isGoal()) {
         finalCase = c;
         return;
@@ -113,16 +103,24 @@ public class Solver
 
       if (debug) StdOut.printf("<-- neighbors :\n");
       for (Case c1 : c.neighbors()) {
-        // if (c1.priority > c.priority+1) continue;
-
         if (debug) {
           StdOut.printf("move: %d\nmanhattan: %d\npriority: %d\n%s\n",
                         c1.move, c1.manh, c1.priority, c1.board.toString());
         }
 
-        pqPre.insert(c1);
+        pq.insert(c1);
       }
       if (debug) StdOut.printf("neighbors -->\n");
+
+      /* detect unsolved case by using additional synchronized A* search */
+      c = pqTwined.delMin();
+      if (c.board.isGoal()) {
+        finalCase = null;
+        return;
+      }
+      for (Case c1 : c.neighbors()) {
+         pqTwined.insert(c1);
+      }
 
       /* step by step */
       // try {
