@@ -44,12 +44,12 @@ public class BoardTests
     printTestBegin(tname, verbose);
 
     Method methGetBlockNumberXY =
-      Board.class.getDeclaredMethod("getBlockNumberXY", int.class, int[].class);
+      Board.class.getDeclaredMethod("getBlockNumberXY", byte.class, byte[].class);
     methGetBlockNumberXY.setAccessible(true);
 
     Board board = new Board(new int[3][3]);
-    for (int i = 1; i < 10; ++i) {
-      int[] vals = new int[2];
+    for (byte i = 1; i < 10; ++i) {
+      byte[] vals = new byte[2];
       methGetBlockNumberXY.invoke(board, i, vals);
 
       if ( (i == 1 && (vals[0] != 1 || vals[1] != 1)) ||
@@ -82,12 +82,12 @@ public class BoardTests
     printTestBegin(tname, verbose);
 
     Method methGetBlockNumber =
-      Board.class.getDeclaredMethod("getBlockNumber",  int.class, int.class);
+      Board.class.getDeclaredMethod("getBlockNumber",  byte.class, byte.class);
     methGetBlockNumber.setAccessible(true);
 
     Board board = new Board(new int[3][3]);
-    for (int i = 0; i < board.dimension(); ++i) {
-      for (int j = 0; j < board.dimension(); ++j) {
+    for (byte i = 0; i < board.dimension(); ++i) {
+      for (byte j = 0; j < board.dimension(); ++j) {
         int v = (int)methGetBlockNumber.invoke(board, i, j);
 
         if ( (i == 0 && j == 0 && (v != 1)) ||
@@ -239,7 +239,8 @@ public class BoardTests
   }
 
   private static int testTwin(boolean verbose)
-    throws IllegalAccessException, NoSuchFieldException
+    throws IllegalAccessException, NoSuchMethodException,
+           InvocationTargetException, NoSuchFieldException
   {
     boolean rs = true;
     String tname = new Object(){}.getClass().getEnclosingMethod().getName();
@@ -260,9 +261,14 @@ public class BoardTests
     initBlocks[2][2] = 0;
     Board board = new Board(initBlocks);
 
-    int[][] blocks = cloneArray((int[][])f.get(board));
+    Method methCloneBoard =
+      Board.class.getDeclaredMethod("cloneBoard", (Class<?>[]) null);
+    methCloneBoard.setAccessible(true);
+
+    Board boardCloned = (Board)methCloneBoard.invoke(board);
+    byte[][] blocks = (byte[][])f.get(boardCloned);
     /* twin manualy */
-    int t = blocks[0][0];
+    byte t = blocks[0][0];
     blocks[0][0] = blocks[0][1];
     blocks[0][1] = t;
     /* get twin board */
@@ -273,10 +279,10 @@ public class BoardTests
       StdOut.printf("twin board:\n%s\n", twin_board.toString());
     }
 
-    int[][] twin_blocks = (int[][])f.get(twin_board);
+    byte[][] twin_blocks = (byte[][])f.get(twin_board);
     /* compare */
-    for (int i = 0; i < board.dimension(); i++) {
-      for (int j = 0; j < board.dimension(); j++) {
+    for (byte i = 0; i < board.dimension(); i++) {
+      for (byte j = 0; j < board.dimension(); j++) {
         if (twin_blocks[i][j] != blocks[i][j]) {
           rs = false;
           return printTestFinish(rs);
@@ -297,8 +303,9 @@ public class BoardTests
     initBlocks[2][2] = 2;
 
     board = new Board(initBlocks);
-    blocks = cloneArray((int[][])f.get(board));
 
+    boardCloned = (Board)methCloneBoard.invoke(board);
+    blocks = (byte[][])f.get(boardCloned);
     /* twin manualy */
     t = blocks[0][0];
     blocks[0][0] = blocks[0][2];
@@ -311,10 +318,10 @@ public class BoardTests
       StdOut.printf("twin board:\n%s\n", twin_board.toString());
     }
 
-    twin_blocks = (int[][])f.get(twin_board);
+    twin_blocks = (byte[][])f.get(twin_board);
     /* compare */
-    for (int i = 0; i < board.dimension(); i++) {
-      for (int j = 0; j < board.dimension(); j++) {
+    for (byte i = 0; i < board.dimension(); i++) {
+      for (byte j = 0; j < board.dimension(); j++) {
         if (twin_blocks[i][j] != blocks[i][j]) {
           rs = false;
           return printTestFinish(rs);
