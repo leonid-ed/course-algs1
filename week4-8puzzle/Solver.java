@@ -7,32 +7,30 @@ import edu.princeton.cs.algs4.Stack;
 public class Solver
 {
   private class Case implements Comparable<Case> {
-    public final int num;
+    public final byte num;
     public final int move;
     public final int priority;
-    public final int hamm;
     public final int manh;
     public final Board board;
     public final Case prevCase;
 
-    public Case(int initNum, int initMove, Board initBoard, Case initPrevCase)
+    public Case(byte initNum, int initMove, Board initBoard, Case initPrevCase)
     {
       num = initNum;
       move = initMove;
       board = initBoard;
       prevCase = initPrevCase;
       manh = board.manhattan();
-      hamm = board.hamming();
       priority = manh + move;
     }
 
     public Iterable<Case> neighbors()
     {
       Queue<Case> queue = new Queue<Case>();
-      int caseCounter = 0;
+      byte caseCounter = 0;
       for (Board b: board.neighbors()) {
         if (prevCase != null && b.equals(prevCase.board)) continue;
-        Case c = new Case(caseCounter++, move+1, b, this);
+        Case c = new Case((byte)(caseCounter++), move+1, b, this);
         queue.enqueue(c);
       }
       return queue;
@@ -74,12 +72,12 @@ public class Solver
   public Solver(Board initial)
   {
     debug = false;
-    Case c = new Case(0, 0, initial, null);
+    Case c = new Case((byte)0, 0, initial, null);
     pq = new MinPQ<Case>();
     pq.insert(c);
 
     pqTwined = new MinPQ<Case>();
-    c = new Case(0, 0, initial.twin(), null);
+    c = new Case((byte)0, 0, initial.twin(), null);
     pqTwined.insert(c);
 
     compute();
