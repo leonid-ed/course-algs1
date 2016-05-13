@@ -40,33 +40,6 @@ public class Board
 
   /* [ PRIVATE METHODS ] */
 
-  /**
-  * Clones the provided array
-  *
-  * @param src
-  * @return a new clone of the provided array
-  */
-  private static  byte[][] cloneArray(int[][] src) {
-    byte length = (byte) src.length;
-    byte[][] target = new byte[length][src[0].length];
-    for (byte i = 0; i < length; i++) {
-      for (byte j = 0; j < length; j++) {
-        target[i][j] = (byte) src[i][j];
-      }
-    }
-    return target;
-  }
-  private static  int[][] cloneArray(byte[][] src) {
-    int length = src.length;
-    int[][] target = new int[length][src[0].length];
-    for (int i = 0; i < length; i++) {
-      for (int j = 0; j < length; j++) {
-        target[i][j] = src[i][j];
-      }
-    }
-    return target;
-  }
-
   private Board cloneBoard()
   {
     Board newBoard = new Board(size);
@@ -172,25 +145,6 @@ public class Board
   private int getBlockNumber(byte i, byte j)
   {
     return size * i + j + 1;
-  }
-
-  private int getBlockNumberXY(byte num, byte[] vals)
-  {
-    int m = num % size;
-    vals[0] = (byte)(num / size + (m > 0 ? 1 : 0));
-    vals[1] = (byte)((m == 0 ? size : m));
-    return 0;
-  }
-
-  private void getXY(int i, byte[] vals)
-  {
-    vals[0] = (byte)(i / size);
-    vals[1] = (byte)(i % size);
-  }
-
-  private short getIndex(byte[] vals)
-  {
-    return (short)(vals[0] * size + vals[1]);
   }
 
   private short getIndex(int i, int j)
