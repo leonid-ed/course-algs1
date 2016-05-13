@@ -5,7 +5,7 @@ public class Board
 {
   private final byte[] blocks;
   private final byte size;
-  private byte[] emptyBlock;
+  private short emptyBlock;
 
   // construct a board from an N-by-N array of blocks
   // (where blocks[i][j] = block in row i, column j)
@@ -13,31 +13,29 @@ public class Board
   {
     size = (byte)initBlocks[0].length;
     blocks = new byte[ size * size ];
-    emptyBlock = null;
+    emptyBlock = -1;
 
     emptyBlockLoop:
     for (byte i = 0; i < size; ++i) {
       for (byte j = 0; j < size; ++j) {
-        blocks[getIndex(i, j)] = (byte)initBlocks[i][j];
+        short index = getIndex(i, j);
+        blocks[index] = (byte)initBlocks[i][j];
 
-        if (blocks[getIndex(i, j)] == 0) {
-          assert emptyBlock == null : "emptyBlock is already set!";
-
-          emptyBlock = new byte[2];
-          emptyBlock[0] = i;
-          emptyBlock[1] = j;
+        if (blocks[index] == 0) {
+          assert emptyBlock == -1 : "emptyBlock is already set!";
+          emptyBlock = index;
         }
       }
     }
 
-    assert emptyBlock != null : "emptyBlock == null";
+    assert emptyBlock != -1 : "emptyBlock == -1";
   }
 
   private Board(byte initSize)
   {
     size = initSize;
     blocks = new byte[size * size];
-    emptyBlock = new byte[2];
+    emptyBlock = -1;
   }
 
   /* [ PRIVATE METHODS ] */
@@ -72,8 +70,8 @@ public class Board
   private Board cloneBoard()
   {
     Board newBoard = new Board(size);
+    newBoard.emptyBlock = emptyBlock;
     System.arraycopy(blocks, 0, newBoard.blocks, 0, blocks.length);
-    System.arraycopy(emptyBlock, 0, newBoard.emptyBlock, 0, emptyBlock.length);
 
     return newBoard;
   }
@@ -91,38 +89,40 @@ public class Board
 
   private void exchangeBlocks(byte i1, byte j1, byte i2, byte j2)
   {
-    int index1 = getIndex(i1, j1);
-    int index2 = getIndex(i2, j2);
+    short index1 = getIndex(i1, j1);
+    short index2 = getIndex(i2, j2);
 
     exchangeBlocks(blocks, index1, index2);
     if (blocks[index1] == 0) {
-      emptyBlock[0] = i1;
-      emptyBlock[1] = j1;
+      emptyBlock = index1;
     }
     else if (blocks[index2] == 0) {
-      emptyBlock[0] = i2;
-      emptyBlock[1] = j2;
+      emptyBlock = index2;
     }
   }
 
   private boolean emptyIsTop()
   {
-    return (emptyBlock[0] == 0);
+    int row = emptyBlock / size;
+    return (row == 0);
   }
 
   private boolean emptyIsBottom()
   {
-    return (emptyBlock[0] == size-1);
+    int row = emptyBlock / size;
+    return (row == size-1);
   }
 
   private boolean emptyIsLeft()
   {
-    return (emptyBlock[1] == 0);
+    int col = emptyBlock % size;
+    return (col == 0);
   }
 
   private boolean emptyIsRight()
   {
-    return (emptyBlock[1] == size-1);
+    int col = emptyBlock % size;
+    return (col == size-1);
   }
 
   private void emptyMoveDown()
@@ -130,7 +130,10 @@ public class Board
     if (emptyIsBottom())
       throw new IllegalStateException();
 
-    exchangeBlocks(emptyBlock[0],emptyBlock[1], (byte)(emptyBlock[0]+1),emptyBlock[1]);
+    byte row = (byte)(emptyBlock / size);
+    byte col = (byte)(emptyBlock % size);
+
+    exchangeBlocks(row, col, (byte)(row+1), col);
   }
 
   private void emptyMoveUp()
@@ -138,7 +141,10 @@ public class Board
     if (emptyIsTop())
       throw new IllegalStateException();
 
-    exchangeBlocks(emptyBlock[0],emptyBlock[1], (byte)(emptyBlock[0]-1),emptyBlock[1]);
+    byte row = (byte)(emptyBlock / size);
+    byte col = (byte)(emptyBlock % size);
+
+    exchangeBlocks(row, col, (byte)(row-1), col);
   }
 
   private void emptyMoveLeft()
@@ -146,7 +152,10 @@ public class Board
     if (emptyIsLeft())
       throw new IllegalStateException();
 
-    exchangeBlocks(emptyBlock[0],emptyBlock[1], emptyBlock[0], (byte)(emptyBlock[1]-1));
+    byte row = (byte)(emptyBlock / size);
+    byte col = (byte)(emptyBlock % size);
+
+    exchangeBlocks(row, col, row, (byte)(col-1));
   }
 
   private void emptyMoveRight()
@@ -154,7 +163,10 @@ public class Board
     if (emptyIsRight())
       throw new IllegalStateException();
 
-    exchangeBlocks(emptyBlock[0],emptyBlock[1], emptyBlock[0], (byte)(emptyBlock[1]+1));
+    byte row = (byte)(emptyBlock / size);
+    byte col = (byte)(emptyBlock % size);
+
+    exchangeBlocks(row, col, row, (byte)(col+1));
   }
 
   private int getBlockNumber(byte i, byte j)
@@ -176,14 +188,14 @@ public class Board
     vals[1] = (byte)(i % size);
   }
 
-  private int getIndex(byte[] vals)
+  private short getIndex(byte[] vals)
   {
-    return vals[0] * size + vals[1];
+    return (short)(vals[0] * size + vals[1]);
   }
 
-  private int getIndex(int i, int j)
+  private short getIndex(int i, int j)
   {
-    return i * size + j;
+    return (short)(i * size + j);
   }
 
 
