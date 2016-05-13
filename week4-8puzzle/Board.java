@@ -225,18 +225,23 @@ public class Board
   public int manhattan()
   {
     int rs = 0;
-    byte[] v1 = new byte[2];
-    byte[] v2 = new byte[2];
+    int m;
+    byte i1;
+    byte j1;
+    byte i2;
+    byte j2;
 
-    for (byte i = 0; i < size; ++i) {
-      for (byte j = 0; j < size; ++j) {
-        if (blocks[getIndex(i, j)] == 0) continue;
+    for (int i = 0; i < size*size; ++i) {
+      if (blocks[i] == 0) continue;
 
-        v1[0] = (byte)(i + 1);
-        v1[1] = (byte)(j + 1);
-        getBlockNumberXY(blocks[getIndex(i, j)], v2);
-        rs += Math.abs(v2[0] - v1[0]) + Math.abs(v2[1] - v1[1]);
-      }
+      i1 = (byte)(i / size + 1);
+      j1 = (byte)(i % size + 1);
+
+      m = blocks[i] % size;
+      i2 = (byte)(blocks[i] / size + (m > 0 ? 1 : 0));
+      j2 = (byte)((m == 0 ? size : m));
+
+      rs += Math.abs(i2 - i1) + Math.abs(j2 - j1);
     }
     return rs;
   }
