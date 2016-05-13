@@ -7,6 +7,7 @@ import edu.princeton.cs.algs4.Stack;
 public class Solver
 {
   private class Case implements Comparable<Case> {
+    public boolean twin;
     public final byte num;
     public final int move;
     public final int priority;
@@ -16,6 +17,8 @@ public class Solver
 
     public Case(byte initNum, int initMove, Board initBoard, Case initPrevCase)
     {
+      twin = false;
+      if (initPrevCase != null) twin = initPrevCase.twin;
       num = initNum;
       move = initMove;
       board = initBoard;
@@ -65,7 +68,6 @@ public class Solver
 
   private final boolean debug;
   private MinPQ<Case> pq;
-  private MinPQ<Case> pqTwined;
   private Case finalCase;
 
   // find a solution to the initial board (using the A* algorithm)
@@ -76,9 +78,9 @@ public class Solver
     pq = new MinPQ<Case>();
     pq.insert(c);
 
-    pqTwined = new MinPQ<Case>();
     c = new Case((byte)0, 0, initial.twin(), null);
-    pqTwined.insert(c);
+    c.twin = true;
+    pq.insert(c);
 
     compute();
   }
@@ -95,7 +97,12 @@ public class Solver
       }
 
       if (c.board.isGoal()) {
-        finalCase = c;
+        if (c.twin == false) {
+          finalCase = c;
+        }
+        else {
+          finalCase = null;
+        }
         return;
       }
 
@@ -109,16 +116,6 @@ public class Solver
         pq.insert(c1);
       }
       if (debug) StdOut.printf("neighbors -->\n");
-
-      /* detect unsolved case by using additional synchronized A* search */
-      c = pqTwined.delMin();
-      if (c.board.isGoal()) {
-        finalCase = null;
-        return;
-      }
-      for (Case c1 : c.neighbors()) {
-         pqTwined.insert(c1);
-      }
 
       /* step by step */
       // try {
