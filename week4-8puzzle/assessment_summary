@@ -1,30 +1,30 @@
 Programming Assignment 4: 8 Puzzle | 8puzzle.zip
 Help Center
 Submission
-Submission time Fri-20-May 16:01:55
-Raw Score 92.26 / 100.00
+Submission time Fri-20-May 17:07:17
+Raw Score 100.00 / 100.00
 Feedback  See the Assessment Guide for information on how to interpret this report.
 Assessment Summary
 
 Compilation:  PASSED
-Style:        FAILED
+Style:        PASSED
 Findbugs:     No potential bugs found.
 API:          PASSED
 
-Correctness:  37/42 tests passed
+Correctness:  42/42 tests passed
 Memory:       8/8 tests passed
 Timing:       17/17 tests passed
 
-Aggregate score: 92.26% [Correctness: 65%, Memory: 10%, Timing: 25%, Style: 0%]
+Aggregate score: 100.00% [Correctness: 65%, Memory: 10%, Timing: 25%, Style: 0%]
 
 Assessment Details
 
 The following files were submitted:
 ----------------------------------
 total 20K
--rw-r--r-- 1 6.6K May 20 13:04 Board.java
--rw-r--r-- 1 4.3K May 20 13:04 Solver.java
--rw-r--r-- 1 3.5K May 20 13:04 studentSubmission.zip
+-rw-r--r-- 1 6.8K May 20 14:09 Board.java
+-rw-r--r-- 1 4.3K May 20 14:09 Solver.java
+-rw-r--r-- 1 3.6K May 20 14:09 studentSubmission.zip
 
 
 ********************************************************************************
@@ -46,10 +46,6 @@ total 20K
 
 % checkstyle *.java
 *-----------------------------------------------------------
-Board.java:195:46: Do not use the ternary conditional operator on Coursera programming assignments.
-Board.java:196:28: Do not use the ternary conditional operator on Coursera programming assignments.
-Solver.java:139:31: Do not use the ternary conditional operator on Coursera programming assignments.
-Checkstyle ends with 3 errors.
 
 ================================================================
 
@@ -96,11 +92,7 @@ Test 1b: Test hamming() with random N-by-N boards
   *  9-by-9
   *  10-by-10
   *  127-by-127
-     -  student   hamming() = 16065
-     -  reference hamming() = 16126
-     -  Failed on trial 1 of 10
-
-==> FAILED
+==> passed
 
 Test 2a: Test manhattan() with file inputs
   *  puzzle04.txt
@@ -119,11 +111,7 @@ Test 2b: Test manhattan() with random N-by-N boards
   *  9-by-9
   *  10-by-10
   *  127-by-127
-     -  student   manhattan() = 2383438
-     -  reference manhattan() = 1361046
-     -  Failed on trial 1 of 10
-
-==> FAILED
+==> passed
 
 Test 3: Test dimension() with random N-by-N boards
   *  2-by-2
@@ -149,10 +137,7 @@ Test 4b: Test toString() with random N-by-N boards
   *  9-by-9
   *  10-by-10
   *  127-by-127
-     -  incorrect student toString()
-     -  Failed on trial 1 of 10
-
-==> FAILED
+==> passed
 
 Test 5a: Test neighbors() with file inputs
   *  puzzle04.txt
@@ -171,12 +156,7 @@ Test 5b: Test neighbors() with random N-by-N boards
   *  9-by-9
   *  10-by-10
   *  127-by-127
-     -  neighbor not found by student:
-        [suppressed]
-
-     -  Failed on trial 1 of 10
-
-==> FAILED
+==> passed
 
 Test 6a: Test neighbors() of neigbors() with file inputs
   *  puzzle04.txt
@@ -234,10 +214,7 @@ Test 8b: Test isGoal() on N-by-N goal boards
   *  5-by-5
   *  6-by-6
   *  100-by-100
-     -  isGoal() returns wrong answer
-     -  student   isGoal() = false
-     -  reference isGoal() = true
-==> FAILED
+==> passed
 
 Test 9: Check whether two Board objects can be created at the same time
   *   random 3-by-3 and 3-by-3 boards
@@ -298,7 +275,7 @@ Test 14: Call manhattan() on a board that is a kth-neighbor of a board
 ==> passed
 
 
-Total: 17/22 tests passed!
+Total: 22/22 tests passed!
 
 
 ================================================================
@@ -615,19 +592,19 @@ Memory usage of an N-by-N board
 
               N       student (bytes)    reference (bytes)
 ----------------------------------------------------------
-=> passed     4            72                  240
-=> passed     8           120                  560
-=> passed    12           200                 1008
-=> passed    16           312                 1584
-=> passed    20           456                 2288
-=> passed    36          1352                 6384
-=> passed    72          5240                23088
-=> passed   120         14456                61488
+=> passed     4            88                  240
+=> passed     8           184                  560
+=> passed    12           344                 1008
+=> passed    16           568                 1584
+=> passed    20           856                 2288
+=> passed    36          2648                 6384
+=> passed    72         10424                23088
+=> passed   120         28856                61488
 ==> 8/8 tests passed
 
 Total: 8/8 tests passed!
 
-Student   memory = 1.00 N^2 + 0.00 N + 56.00   (R^2 = 1.000)
+Student   memory = 2.00 N^2 + 0.00 N + 56.00   (R^2 = 1.000)
 Reference memory = 4.00 N^2 + 32.00 N + 48.00   (R^2 = 1.000)
 
 ================================================================
@@ -661,9 +638,9 @@ Maximum time allowed per puzzle is 10 seconds.
 => passed  puzzle31.txt   3     0.02      34574               21242               13333
 => passed  puzzle34.txt   4     0.08     174790               83780               91011
 => passed  puzzle37.txt   4     0.05     110738               53282               57457
-=> passed  puzzle39.txt   4     0.03      44945               22277               22669
-=> passed  puzzle41.txt   5     0.02      23791               10217               13575
-=> passed  puzzle44.txt   5     0.07     105214               47149               58066
+=> passed  puzzle39.txt   4     0.02      44945               22277               22669
+=> passed  puzzle41.txt   5     0.01      23791               10217               13575
+=> passed  puzzle44.txt   5     0.06     105214               47149               58066
 ==> 17/17 tests passed
 
 Total: 17/17 tests passed!
