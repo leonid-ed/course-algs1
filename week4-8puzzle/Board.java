@@ -3,39 +3,41 @@ import edu.princeton.cs.algs4.Queue;
 
 public class Board
 {
-  private final byte[] blocks;
+  private final char[] blocks;
   private final byte size;
-  private short emptyBlock;
+  private char emptyBlock;
 
   // construct a board from an N-by-N array of blocks
   // (where blocks[i][j] = block in row i, column j)
   public Board(int[][] initBlocks)
   {
     size = (byte) initBlocks[0].length;
-    blocks = new byte[ size * size ];
-    emptyBlock = -1;
+    blocks = new char[ size * size ];
+    boolean emptyBlockIsSet = false;
 
     emptyBlockLoop:
     for (byte i = 0; i < size; ++i) {
       for (byte j = 0; j < size; ++j) {
-        short index = getIndex(i, j);
-        blocks[index] = (byte) initBlocks[i][j];
+        char index = getIndex(i, j);
+        blocks[index] = (char) initBlocks[i][j];
 
         if (blocks[index] == 0) {
-          assert emptyBlock == -1 : "emptyBlock is already set!";
+          String msg = "emptyBlock is already set! (emtyBlock = " + emptyBlock +
+                       ", index = " + index + ")";
+          assert !emptyBlockIsSet : msg;
           emptyBlock = index;
+          emptyBlockIsSet = true;
         }
       }
     }
 
-    assert emptyBlock != -1 : "emptyBlock == -1";
+    assert emptyBlockIsSet : "emptyBlock is not set!";
   }
 
   private Board(byte initSize)
   {
     size = initSize;
-    blocks = new byte[size * size];
-    emptyBlock = -1;
+    blocks = new char[size * size];
   }
 
   /* [ PRIVATE METHODS ] */
@@ -49,21 +51,21 @@ public class Board
     return newBoard;
   }
 
-  private static void exchangeBlocks(byte[] blocks, int i1, int i2)
+  private static void exchangeBlocks(char[] blocks, int i1, int i2)
   {
 
     if (i1 > blocks.length-1 || i2 > blocks.length-1)
       throw new IndexOutOfBoundsException();
 
-    byte t = blocks[i1];
+    char t = blocks[i1];
     blocks[i1] = blocks[i2];
     blocks[i2] = t;
   }
 
   private void exchangeBlocks(byte i1, byte j1, byte i2, byte j2)
   {
-    short index1 = getIndex(i1, j1);
-    short index2 = getIndex(i2, j2);
+    char index1 = getIndex(i1, j1);
+    char index2 = getIndex(i2, j2);
 
     exchangeBlocks(blocks, index1, index2);
     if (blocks[index1] == 0) {
@@ -147,9 +149,9 @@ public class Board
     return size * i + j + 1;
   }
 
-  private short getIndex(int i, int j)
+  private char getIndex(int i, int j)
   {
-    return (short) (i * size + j);
+    return (char) (i * size + j);
   }
 
 
@@ -192,8 +194,13 @@ public class Board
       j1 = (byte) (i % size + 1);
 
       m = blocks[i] % size;
-      i2 = (byte) (blocks[i] / size + (m > 0 ? 1 : 0));
-      j2 = (byte) ((m == 0 ? size : m));
+      i2 = (byte) (blocks[i] / size);
+      if (m > 0) ++i2;
+
+      if (m == 0)
+        j2 = (byte) size;
+      else
+        j2 = (byte) m;
 
       rs += Math.abs(i2 - i1) + Math.abs(j2 - j1);
     }
@@ -298,7 +305,7 @@ public class Board
     s.append(size + "\n");
     for (byte i = 0; i < size; i++) {
       for (byte j = 0; j < size; j++) {
-        s.append(String.format("%2d ", blocks[getIndex(i, j)]));
+        s.append(String.format("%2d ", (int) blocks[getIndex(i, j)]));
       }
       s.append("\n");
     }

@@ -33,104 +33,6 @@ public class BoardTests
     return target;
   }
 
-  /* [ TEST PRIVATE METHODS ] */
-
-  private static int testGetBlockNumberXY(boolean verbose)
-    throws IllegalAccessException, NoSuchMethodException,
-           InvocationTargetException
-  {
-    boolean rs = true;
-    String tname = new Object(){}.getClass().getEnclosingMethod().getName();
-    printTestBegin(tname, verbose);
-
-    Method methGetBlockNumberXY =
-      Board.class.getDeclaredMethod("getBlockNumberXY", byte.class, byte[].class);
-    methGetBlockNumberXY.setAccessible(true);
-
-    int initBlocks[][] = new int[3][3];
-    initBlocks[0][0] = 8;
-    initBlocks[0][1] = 1;
-    initBlocks[0][2] = 3;
-    initBlocks[1][0] = 4;
-    initBlocks[1][1] = 0;
-    initBlocks[1][2] = 2;
-    initBlocks[2][0] = 7;
-    initBlocks[2][1] = 6;
-    initBlocks[2][2] = 5;
-    Board board = new Board(initBlocks);
-    for (byte i = 1; i < 10; ++i) {
-      byte[] vals = new byte[2];
-      methGetBlockNumberXY.invoke(board, i, vals);
-
-      if ( (i == 1 && (vals[0] != 1 || vals[1] != 1)) ||
-           (i == 2 && (vals[0] != 1 || vals[1] != 2)) ||
-           (i == 3 && (vals[0] != 1 || vals[1] != 3)) ||
-           (i == 4 && (vals[0] != 2 || vals[1] != 1)) ||
-           (i == 5 && (vals[0] != 2 || vals[1] != 2)) ||
-           (i == 6 && (vals[0] != 2 || vals[1] != 3)) ||
-           (i == 7 && (vals[0] != 3 || vals[1] != 1)) ||
-           (i == 8 && (vals[0] != 3 || vals[1] != 2)) ||
-           (i == 9 && (vals[0] != 3 || vals[1] != 3)) )
-      {
-        rs = false;
-      }
-
-      if (verbose)
-        StdOut.printf("%d : (%d, %d)\n", i, vals[0], vals[1]);
-    }
-
-    StdOut.printf("... %s\n", (rs == true ? "OK" : "Failed :("));
-    return (rs == true ? 0 : -1);
-  }
-
-  private static int testGetBlockNumber(boolean verbose)
-      throws IllegalAccessException, NoSuchMethodException,
-           InvocationTargetException
-  {
-    boolean rs = true;
-    String tname = new Object(){}.getClass().getEnclosingMethod().getName();
-    printTestBegin(tname, verbose);
-
-    Method methGetBlockNumber =
-      Board.class.getDeclaredMethod("getBlockNumber",  byte.class, byte.class);
-    methGetBlockNumber.setAccessible(true);
-
-    int initBlocks[][] = new int[3][3];
-    initBlocks[0][0] = 8;
-    initBlocks[0][1] = 1;
-    initBlocks[0][2] = 3;
-    initBlocks[1][0] = 4;
-    initBlocks[1][1] = 0;
-    initBlocks[1][2] = 2;
-    initBlocks[2][0] = 7;
-    initBlocks[2][1] = 6;
-    initBlocks[2][2] = 5;
-    Board board = new Board(initBlocks);
-    for (byte i = 0; i < board.dimension(); ++i) {
-      for (byte j = 0; j < board.dimension(); ++j) {
-        int v = (int)methGetBlockNumber.invoke(board, i, j);
-
-        if ( (i == 0 && j == 0 && (v != 1)) ||
-             (i == 0 && j == 1 && (v != 2)) ||
-             (i == 0 && j == 2 && (v != 3)) ||
-             (i == 1 && j == 0 && (v != 4)) ||
-             (i == 1 && j == 1 && (v != 5)) ||
-             (i == 1 && j == 2 && (v != 6)) ||
-             (i == 2 && j == 0 && (v != 7)) ||
-             (i == 2 && j == 1 && (v != 8)) ||
-             (i == 2 && j == 2 && (v != 9)) )
-        {
-          rs = false;
-        }
-
-        if (verbose)
-          StdOut.printf("[%d,%d] : %d\n", i, j, v);
-      }
-    }
-
-    return printTestFinish(rs);
-  }
-
   /* [ TEST PUBLIC METHODS ] */
 
   private static int testHamming(boolean verbose)
@@ -255,6 +157,26 @@ public class BoardTests
       StdOut.printf("board.isGoal() = %b\n", board.isGoal());
     }
 
+    if (!rs) return printTestFinish(rs);
+
+    /* 100x100 */
+    initBlocks = new int[100][100];
+    for (int i = 0; i < 100; ++i)
+      for (int j = 0; j < 100; ++j)
+        if (i == 99 && j == 99)
+          continue;
+        else
+          initBlocks[i][j] = i * 100 + j + 1;
+
+    board = new Board(initBlocks);
+
+    if (verbose) {
+      StdOut.printf("%s\n", board.toString());
+      StdOut.printf("board.isGoal() = %b\n", board.isGoal());
+    }
+
+    rs = (true == board.isGoal());
+
     return printTestFinish(rs);
   }
 
@@ -286,9 +208,9 @@ public class BoardTests
     methCloneBoard.setAccessible(true);
 
     Board boardCloned = (Board)methCloneBoard.invoke(board);
-    byte[] blocks = (byte[])f.get(boardCloned);
+    char[] blocks = (char[])f.get(boardCloned);
     /* twin manualy */
-    byte t = blocks[0];
+    char t = blocks[0];
     blocks[0] = blocks[1];
     blocks[1] = t;
     /* get twin board */
@@ -300,7 +222,7 @@ public class BoardTests
       StdOut.printf("twin board:\n%s\n", twin_board.toString());
     }
 
-    byte[] twin_blocks = (byte[])f.get(twin_board);
+    char[] twin_blocks = (char[])f.get(twin_board);
     /* compare */
     for (int i = 0; i < board.dimension()*board.dimension(); ++i) {
       if (twin_blocks[i] != blocks[i]) {
@@ -324,7 +246,7 @@ public class BoardTests
     board = new Board(initBlocks);
 
     boardCloned = (Board)methCloneBoard.invoke(board);
-    blocks = (byte[])f.get(boardCloned);
+    blocks = (char[])f.get(boardCloned);
     /* twin manualy */
     t = blocks[0];
     blocks[0] = blocks[2];
@@ -337,7 +259,7 @@ public class BoardTests
       StdOut.printf("twin board:\n%s\n", twin_board.toString());
     }
 
-    twin_blocks = (byte[])f.get(twin_board);
+    twin_blocks = (char[])f.get(twin_board);
     /* compare */
     for (int i = 0; i < board.dimension()*board.dimension(); ++i) {
       if (twin_blocks[i] != blocks[i]) {
@@ -457,9 +379,7 @@ public class BoardTests
   public static void main(String[] args)
     throws Exception
   {
-    testGetBlockNumberXY(false);
-    testGetBlockNumber(false);
-    testHamming(false);
+    testHamming(true);
     testManhattan(false);
     testIsGoal(false);
     testTwin(false);

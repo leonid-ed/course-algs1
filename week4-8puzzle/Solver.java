@@ -136,7 +136,10 @@ public class Solver
   // min number of moves to solve initial board; -1 if unsolvable
   public int moves()
   {
-    return (finalCase != null ? finalCase.move : -1);
+    if (finalCase != null)
+      return finalCase.move;
+    else
+      return -1;
   }
 
   // sequence of boards in a shortest solution; null if unsolvable
