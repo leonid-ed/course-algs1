@@ -1,5 +1,5 @@
 import edu.princeton.cs.algs4.Queue;
-import edu.princeton.cs.algs4.StdOut;
+// import edu.princeton.cs.algs4.StdOut;
 
 public class Board
 {
@@ -11,7 +11,7 @@ public class Board
   // (where blocks[i][j] = block in row i, column j)
   public Board(int[][] initBlocks)
   {
-    size = (byte)initBlocks[0].length;
+    size = (byte) initBlocks[0].length;
     blocks = new byte[ size * size ];
     emptyBlock = -1;
 
@@ -19,7 +19,7 @@ public class Board
     for (byte i = 0; i < size; ++i) {
       for (byte j = 0; j < size; ++j) {
         short index = getIndex(i, j);
-        blocks[index] = (byte)initBlocks[i][j];
+        blocks[index] = (byte) initBlocks[i][j];
 
         if (blocks[index] == 0) {
           assert emptyBlock == -1 : "emptyBlock is already set!";
@@ -103,10 +103,10 @@ public class Board
     if (emptyIsBottom())
       throw new IllegalStateException();
 
-    byte row = (byte)(emptyBlock / size);
-    byte col = (byte)(emptyBlock % size);
+    byte row = (byte) (emptyBlock / size);
+    byte col = (byte) (emptyBlock % size);
 
-    exchangeBlocks(row, col, (byte)(row+1), col);
+    exchangeBlocks(row, col, (byte) (row+1), col);
   }
 
   private void emptyMoveUp()
@@ -114,10 +114,10 @@ public class Board
     if (emptyIsTop())
       throw new IllegalStateException();
 
-    byte row = (byte)(emptyBlock / size);
-    byte col = (byte)(emptyBlock % size);
+    byte row = (byte) (emptyBlock / size);
+    byte col = (byte) (emptyBlock % size);
 
-    exchangeBlocks(row, col, (byte)(row-1), col);
+    exchangeBlocks(row, col, (byte) (row-1), col);
   }
 
   private void emptyMoveLeft()
@@ -125,10 +125,10 @@ public class Board
     if (emptyIsLeft())
       throw new IllegalStateException();
 
-    byte row = (byte)(emptyBlock / size);
-    byte col = (byte)(emptyBlock % size);
+    byte row = (byte)  (emptyBlock / size);
+    byte col = (byte) (emptyBlock % size);
 
-    exchangeBlocks(row, col, row, (byte)(col-1));
+    exchangeBlocks(row, col, row, (byte) (col-1));
   }
 
   private void emptyMoveRight()
@@ -136,10 +136,10 @@ public class Board
     if (emptyIsRight())
       throw new IllegalStateException();
 
-    byte row = (byte)(emptyBlock / size);
-    byte col = (byte)(emptyBlock % size);
+    byte row = (byte) (emptyBlock / size);
+    byte col = (byte) (emptyBlock % size);
 
-    exchangeBlocks(row, col, row, (byte)(col+1));
+    exchangeBlocks(row, col, row, (byte) (col+1));
   }
 
   private int getBlockNumber(byte i, byte j)
@@ -149,7 +149,7 @@ public class Board
 
   private short getIndex(int i, int j)
   {
-    return (short)(i * size + j);
+    return (short) (i * size + j);
   }
 
 
@@ -188,12 +188,12 @@ public class Board
     for (int i = 0; i < size*size; ++i) {
       if (blocks[i] == 0) continue;
 
-      i1 = (byte)(i / size + 1);
-      j1 = (byte)(i % size + 1);
+      i1 = (byte) (i / size + 1);
+      j1 = (byte) (i % size + 1);
 
       m = blocks[i] % size;
-      i2 = (byte)(blocks[i] / size + (m > 0 ? 1 : 0));
-      j2 = (byte)((m == 0 ? size : m));
+      i2 = (byte) (blocks[i] / size + (m > 0 ? 1 : 0));
+      j2 = (byte) ((m == 0 ? size : m));
 
       rs += Math.abs(i2 - i1) + Math.abs(j2 - j1);
     }

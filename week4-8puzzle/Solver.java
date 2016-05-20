@@ -7,13 +7,13 @@ import edu.princeton.cs.algs4.Stack;
 public class Solver
 {
   private class Case implements Comparable<Case> {
-    public boolean twin;
-    public final byte num;
-    public final int move;
-    public final int priority;
-    public final int manh;
-    public final Board board;
-    public final Case prevCase;
+    private boolean twin;
+    private final byte num;
+    private final int move;
+    private final int priority;
+    private final int manh;
+    private final Board board;
+    private final Case prevCase;
 
     public Case(byte initNum, int initMove, Board initBoard, Case initPrevCase)
     {
@@ -33,7 +33,7 @@ public class Solver
       byte caseCounter = 0;
       for (Board b: board.neighbors()) {
         if (prevCase != null && b.equals(prevCase.board)) continue;
-        Case c = new Case((byte)(caseCounter++), move+1, b, this);
+        Case c = new Case((byte) (caseCounter++), move+1, b, this);
         queue.enqueue(c);
       }
       return queue;
@@ -74,11 +74,11 @@ public class Solver
   public Solver(Board initial)
   {
     debug = false;
-    Case c = new Case((byte)0, 0, initial, null);
+    Case c = new Case((byte) 0, 0, initial, null);
     pq = new MinPQ<Case>();
     pq.insert(c);
 
-    c = new Case((byte)0, 0, initial.twin(), null);
+    c = new Case((byte) 0, 0, initial.twin(), null);
     c.twin = true;
     pq.insert(c);
 
@@ -87,7 +87,7 @@ public class Solver
 
   private void compute()
   {
-    while(true) {
+    while (true) {
       Case c = pq.delMin();
 
       if (debug) {
@@ -97,7 +97,7 @@ public class Solver
       }
 
       if (c.board.isGoal()) {
-        if (c.twin == false) {
+        if (!c.twin) {
           finalCase = c;
         }
         else {
