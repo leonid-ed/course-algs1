@@ -49,7 +49,6 @@ public class Percolation {
       return;
 
     byte old_flags = getComponentFlags(i, j);
-    // System.out.println("flags of (" + i + "," + j + ") = " + Integer.toBinaryString(old_flags));
     byte flags = old_flags;
     mMap[getIndex(i, j)] |= maskIsOpen;
     flags |= maskIsOpen;
@@ -64,7 +63,6 @@ public class Percolation {
       }
     }
     else {
-      // mModel.union(getIndex(i, j), mTop);
       flags |= maskIsFull;
     }
 
@@ -79,7 +77,6 @@ public class Percolation {
     }
     else {
       flags |= maskIsLow;
-      // setComponentFlags(i, j, flags);
     }
 
     if (j > 1) {
@@ -109,7 +106,6 @@ public class Percolation {
     }
 
     setComponentFlags(i, j, flags);
-    // System.out.println("new flags of (" + i + "," + j + ") = " + Integer.toBinaryString(flags));
   }
 
   /* is site (row i, column j) open? */
