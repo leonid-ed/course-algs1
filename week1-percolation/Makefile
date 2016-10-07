@@ -25,6 +25,10 @@ checkstyle: $(SUBMIT_PACK)
 findbugs: Percolation PercolationStats
 	findbugs-algs4 $(BIN)
 
+Question3: Successor.java
+	javac-algs4 Successor.java
+	java-algs4 Successor
+
 clean:
 	rm -f $(SUBMIT_NAME).zip
 	rm -f *.class
