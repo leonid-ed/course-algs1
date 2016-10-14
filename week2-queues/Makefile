@@ -19,7 +19,7 @@ Subset: Subset.java
 	javac-algs4 Subset.java
 
 zip: RandomizedQueue.java Deque.java Subset.java
-	zip deque.zip Deque.java RandomizedQueue.java Subset.java
+	zip queues.zip Deque.java RandomizedQueue.java Subset.java
 
 clean:
-	rm -f deque.zip *.class
+	rm -f queues.zip *.class
