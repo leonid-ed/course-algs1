@@ -132,38 +132,30 @@ public class KdTree
 
     Node node = find(mRoot, point);
     if (node.p == null) {
-      boolean evenLevel = mFindEvenLevel;
-      node.setPoint(point, evenLevel);
+      node.setPoint(point, mFindEvenLevel);
       mSize++;
 
       node.num = mSize;
-      // node.even = evenLevel;
 
       // StdOut.printf("%s\n", point);
     }
   }
 
-  private void print(Node root, int tabsize)
+  private void print(Node root, int tabsize, boolean even)
   {
     if (root == null)  throw new NullPointerException();
-    if (root == mRoot) {
-      mFindEvenLevel = true;
-    }
 
     if (root.rt != null) {
-      mFindEvenLevel = !mFindEvenLevel;
-      print(root.rt, tabsize+1);
+      print(root.rt, tabsize+1, !even);
     }
 
     for (int i = 0; i < tabsize; i++)
       StdOut.printf("  ");
 
-    // if (root.even)
-    if (mFindEvenLevel)
+    if (even)
       StdOut.printf("-");
     else
       StdOut.printf("|");
-
 
     if (root.p != null) {
       StdOut.printf("%d: %s\n", root.num, root.p);
@@ -173,16 +165,13 @@ public class KdTree
     }
 
     if (root.lb != null) {
-      mFindEvenLevel = !mFindEvenLevel;
-      print(root.lb, tabsize+1);
+      print(root.lb, tabsize+1, !even);
     }
-
-    mFindEvenLevel = !mFindEvenLevel;
   }
 
   public void printDebug()
   {
-    print(mRoot, 0);
+    print(mRoot, 0, true);
   }
 
   // does the set contain point p?
@@ -209,10 +198,9 @@ public class KdTree
     return queue;
   }
 
-  private void findNearest(Node node, Point2D point, Point2D potentPoint)
+  private void findNearest(Node node, Point2D point, Point2D potentPoint, boolean even)
   {
     if (node == mRoot) {
-      mFindEvenLevel = true;
       mNearestDist = Double.POSITIVE_INFINITY;
       potentPoint = new Point2D(node.p.x(), point.y());
     }
@@ -224,8 +212,7 @@ public class KdTree
     }
 
     // <-- debug output
-    // if (node.even)
-    if (mFindEvenLevel)
+    if (even)
        StdOut.printf("-");
      else
        StdOut.printf("|");
@@ -234,12 +221,9 @@ public class KdTree
 
 
     // regular search
-    boolean lbDir = false;
     Node next = null;
-    if (mFindEvenLevel) {
-    // if (node.even) {
+    if (even) {
       if (point.x() < node.p.x()) {
-        lbDir = true;
         next = node.lb;
       }
       else {
@@ -248,7 +232,6 @@ public class KdTree
     }
     else {
       if (point.y() < node.p.y()) {
-        lbDir = true;
         next = node.lb;
       }
       else {
@@ -259,15 +242,13 @@ public class KdTree
     Point2D nextPotentPoint = null;
     if (next.p != null) {
       // make up a next potential point
-      // if (node.even) {
-      if (mFindEvenLevel) {
+      if (even) {
         nextPotentPoint = new Point2D(point.x(), next.p.y());
       }
       else {
         nextPotentPoint = new Point2D(next.p.x(), point.y());
       }
-      mFindEvenLevel = !mFindEvenLevel;
-      findNearest(next, point, nextPotentPoint);
+      findNearest(next, point, nextPotentPoint, !even);
     }
     else {
       StdOut.printf("  %d   no any point in next half\n", node.num);
@@ -276,14 +257,13 @@ public class KdTree
     // check potential point
     if (point.distanceTo(potentPoint) < mNearestDist)
     {
-      if (lbDir)
+      if (next == node.lb)
         next = node.rt;
       else
         next = node.lb;
 
       if (next.p != null) {
         // make up a new next potential point
-        // if (node.even) {
         if (mFindEvenLevel) {
           nextPotentPoint = new Point2D(node.p.x(), next.p.y());
         }
@@ -291,8 +271,7 @@ public class KdTree
           nextPotentPoint = new Point2D(next.p.x(), node.p.y());
         }
 
-        mFindEvenLevel = !mFindEvenLevel;
-        findNearest(next, point, nextPotentPoint);
+        findNearest(next, point, nextPotentPoint, !even);
       }
       else {
         StdOut.printf("  %d   no any point in alt half\n", node.num);
@@ -301,8 +280,6 @@ public class KdTree
     else {
       StdOut.printf("  %d   no nearest point in alt half\n", node.num);
     }
-
-    mFindEvenLevel = !mFindEvenLevel;
   }
 
   // a nearest neighbor in the set to point p; null if the set is empty
@@ -311,7 +288,7 @@ public class KdTree
     if (point == null)   throw new NullPointerException();
     if (isEmpty())   return null;
 
-    findNearest(mRoot, point, null);
+    findNearest(mRoot, point, null, true);
     return mNearestNode.p;
   }
 
