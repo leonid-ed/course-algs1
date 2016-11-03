@@ -47,6 +47,7 @@ public class KdTree
   private boolean mFindEvenLevel;
   private Node mNearestNode;
   private double mNearestDist;
+  private Queue<Point2D> mRanged;
 
   // construct an empty set of points
   public KdTree()
@@ -56,6 +57,7 @@ public class KdTree
     mFindEvenLevel = true;
     mNearestDist = Double.POSITIVE_INFINITY;
     mNearestNode = null;
+    mRanged = null;
   }
 
   // is the set empty?
@@ -188,14 +190,62 @@ public class KdTree
     drawPoint(mRoot, false);
   }
 
+  private void findRanged(Node node, RectHV rect, boolean even)
+  {
+    boolean lbInter = rect.intersects(node.lb.rect);
+    boolean rtInter = rect.intersects(node.rt.rect);
+
+    // <-- debug output
+    if (even)
+       StdOut.printf("-");
+     else
+       StdOut.printf("|");
+    StdOut.printf("%d   %s", node.num, node.p);
+    if (lbInter)
+      StdOut.printf(" (lb intersected)");
+    if (rtInter)
+      StdOut.printf(" (rt intersected)");
+    StdOut.printf("\n");
+    // -->
+
+    if (rect.contains(node.p)) {
+      StdOut.printf("  %d point is in the given rect\n", node.num);
+      mRanged.enqueue(node.p);
+    }
+
+    Node next = null;
+
+    if (lbInter) {
+      if (node.lb.p != null) {
+        next = node.lb;
+        findRanged(next, rect, !even);
+      }
+      else {
+        StdOut.printf("  %d no points in left/bottom half\n", node.num);
+      }
+    }
+
+    if (rtInter) {
+      if (node.rt.p != null) {
+        next = node.rt;
+        findRanged(next, rect, !even);
+      }
+      else {
+        StdOut.printf("  %d no points in right/top half\n", node.num);
+      }
+    }
+  }
+
   // all points that are inside the rectangle
   public Iterable<Point2D> range(RectHV rect)
   {
     if (rect == null)  throw new NullPointerException();
+    if (isEmpty())   return null;
 
-    Queue<Point2D> queue = new Queue<Point2D>();
+    mRanged = new Queue<Point2D>();
+    findRanged(mRoot, rect, true);
 
-    return queue;
+    return mRanged;
   }
 
   private void findNearest(Node node, Point2D point, Point2D potentPoint, boolean even)
@@ -251,7 +301,7 @@ public class KdTree
       findNearest(next, point, nextPotentPoint, !even);
     }
     else {
-      StdOut.printf("  %d   no any point in next half\n", node.num);
+      StdOut.printf("  %d   no any points in next half\n", node.num);
     }
 
     // check potential point
@@ -274,11 +324,11 @@ public class KdTree
         findNearest(next, point, nextPotentPoint, !even);
       }
       else {
-        StdOut.printf("  %d   no any point in alt half\n", node.num);
+        StdOut.printf("  %d   no any points in alt half\n", node.num);
       }
     }
     else {
-      StdOut.printf("  %d   no nearest point in alt half\n", node.num);
+      StdOut.printf("  %d   no nearest points in alt half\n", node.num);
     }
   }
 
@@ -308,10 +358,16 @@ public class KdTree
     StdOut.printf("KdTree:\n");
     kdtree.printDebug();
 
-    Point2D q = new Point2D(0.042734, 0.523672);
-    StdOut.printf("Goal point %s\n", q);
+    //
+    // Point2D q = new Point2D(0.042734, 0.523672);
+    // StdOut.printf("Goal point %s\n", q);
+    // Point2D p = kdtree.nearest(q);
+    // StdOut.printf("Nearest point: %s\n", p);
 
-    Point2D p = kdtree.nearest(q);
-    StdOut.printf("Nearest point: %s\n", p);
+    RectHV rect = new RectHV(0.04, 0.3, 0.09, 0.67);
+    StdOut.printf("Points are in rect %s\n", rect);
+    for (Point2D p : kdtree.range(rect)) {
+      StdOut.printf("%s\n", p);
+    }
   }
 }
