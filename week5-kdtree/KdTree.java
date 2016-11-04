@@ -134,11 +134,8 @@ public class KdTree
     Node node = find(mRoot, point);
     if (node.p == null) {
       node.setPoint(point, mFindEvenLevel);
+      mSize++;
     }
-    else {
-      node.rt.setPoint(point, !mFindEvenLevel);
-    }
-    mSize++;
 
     // node.num = mSize;
 
@@ -242,11 +239,11 @@ public class KdTree
   public Iterable<Point2D> range(RectHV rect)
   {
     if (rect == null)  throw new NullPointerException();
-    if (isEmpty())   return null;
 
     mRanged = new Queue<Point2D>();
-    findRanged(mRoot, rect, true);
+    if (isEmpty())   return mRanged;
 
+    findRanged(mRoot, rect, true);
     return mRanged;
   }
 
