@@ -198,7 +198,7 @@ public class Board
       if (m > 0) ++i2;
 
       if (m == 0)
-        j2 = (byte) size;
+        j2 = size;
       else
         j2 = (byte) m;
 

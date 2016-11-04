@@ -33,7 +33,7 @@ public class Solver
       byte caseCounter = 0;
       for (Board b: board.neighbors()) {
         if (prevCase != null && b.equals(prevCase.board)) continue;
-        Case c = new Case((byte) (caseCounter++), move+1, b, this);
+        Case c = new Case((caseCounter++), move+1, b, this);
         queue.enqueue(c);
       }
       return queue;
