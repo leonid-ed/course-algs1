@@ -81,7 +81,7 @@ public class KdTree
 
     if (root.p == null)   return root;
 
-    if (root.p == point)
+    if (root.p.equals(point))
       return root;
 
     Node next = null;
