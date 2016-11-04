@@ -73,7 +73,7 @@ public class BruteCollinearPoints {
   // the line segments
   public LineSegment[] segments()
   {
-    return (LineSegment[]) segs;
+    return segs;
   }
 
   /**
@@ -92,7 +92,7 @@ public class BruteCollinearPoints {
     }
 
     // draw the points
-    StdDraw.show(0);
+    StdDraw.enableDoubleBuffering();
     StdDraw.setXscale(0, 32768);
     StdDraw.setYscale(0, 32768);
     for (Point p : points) {
