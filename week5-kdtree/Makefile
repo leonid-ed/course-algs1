@@ -5,7 +5,7 @@ all: PointSET
 SUBMIT_PACK = PointSET.java KdTree.java
 SUBMIT_NAME = kdtree
 
-BIN=$(shell ls -Q --quoting-style=shell PointSET\$$*.class PointSET.class 2>/dev/null)
+BIN=$(shell ls -Q --quoting-style=shell PointSET\$$*.class PointSET.class KdTree\$$*.class KdTree.class 2>/dev/null)
 
 BruteRangeSearchVisualizer: BruteRangeSearchVisualizer.java
 	javac-algs4 -Xlint $<
@@ -25,8 +25,12 @@ KdTree: KdTree.java
 testBrute: PointSET.class BruteRangeSearchVisualizer.class BruteNearestNeighborVisualizer.class
 	java-algs4 BruteNearestNeighborVisualizer input20K.txt
 
-testKdTree: KdTree.class KdTreeVisualizer.class
-	java-algs4 KdTreeVisualizer
+KdTreeTests: KdTreeTests.java
+	javac-algs4 -Xlint KdTreeTests.java
+
+testKdTree: KdTree KdTreeTests
+	java-algs4 KdTreeTests
+
 
 zip: $(SUBMIT_PACK)
 	zip $(SUBMIT_NAME).zip $(SUBMIT_PACK)
@@ -34,7 +38,7 @@ zip: $(SUBMIT_PACK)
 checkstyle: $(SUBMIT_PACK)
 	checkstyle-algs4 $(SUBMIT_PACK)
 
-findbugs: Board Solver
+findbugs: PointSET KdTree
 	findbugs-algs4 $(BIN)
 
 clean:
