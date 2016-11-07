@@ -313,7 +313,7 @@ public class KdTree
 
       if (next.p != null) {
         // make up a new next potential point
-        if (mFindEvenLevel) {
+        if (even) {
           nextPotentPoint = new Point2D(node.p.x(), next.p.y());
         }
         else {
