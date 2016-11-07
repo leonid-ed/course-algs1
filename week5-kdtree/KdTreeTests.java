@@ -9,6 +9,13 @@ public class KdTreeTests
 {
   /* [ HELPFUL METHODS ] */
 
+  private static void vprintf(boolean verbose, String format, Object ... arguments)
+  {
+    if (verbose) {
+      StdOut.printf(format, arguments);
+    }
+  }
+
   private static int printTestFinish(boolean rs)
   {
     StdOut.printf("... %s\n", (rs == true ? "OK" : "Failed :("));
@@ -93,22 +100,16 @@ public class KdTreeTests
 
     r = kdtree.contains(p);
     rs &= (r == true);
-    if (verbose) {
-      StdOut.printf("check1 KdTree contains the points: contains() == %b\n", r);
-    }
+    vprintf(verbose, "check1 KdTree contains the points: contains() == %b\n", r);
 
     r = kdtree.contains(p);
     rs &= (r == true);
-    if (verbose) {
-      StdOut.printf("check2 KdTree contains the points: contains() == %b\n", r);
-    }
+    vprintf(verbose, "check2 KdTree contains the points: contains() == %b\n", r);
 
     p = new Point2D(1.0, 1.0);
     r = kdtree.contains(p);
     rs &= (r == true);
-    if (verbose) {
-      StdOut.printf("check KdTree doesn't contain given point: contains() == %b\n", r);
-    }
+    vprintf(verbose, "check KdTree doesn't contain given point: contains() == %b\n", r);
 
     return printTestFinish(rs);
   }
@@ -127,30 +128,22 @@ public class KdTreeTests
 
     v = kdtree.size();
     rs &= (v == 0);
-    if (verbose) {
-      StdOut.printf("check KdTree contains no points: size() == %d\n", v);
-    }
+    vprintf(verbose, "check KdTree contains no points: size() == %d\n", v);
 
     kdtree.insert(p);
     v = kdtree.size();
     rs &= (v == 1);
-    if (verbose) {
-      StdOut.printf("check KdTree contains 1 points: size() == %d\n", v);
-    }
+    vprintf(verbose, "check KdTree contains 1 points: size() == %d\n", v);
 
     kdtree.insert(q);
     v = kdtree.size();
     rs &= (v == 2);
-    if (verbose) {
-      StdOut.printf("check KdTree contains 2 points: size() == %d\n", v);
-    }
+    vprintf(verbose, "check KdTree contains 2 points: size() == %d\n", v);
 
     kdtree.insert(q);
     v = kdtree.size();
     rs &= (v == 2);
-    if (verbose) {
-      StdOut.printf("check KdTree after adding one point twice: size() == %d\n", v);
-    }
+    vprintf(verbose, "check KdTree after adding one point twice: size() == %d\n", v);
 
     return printTestFinish(rs);
   }
@@ -177,11 +170,8 @@ public class KdTreeTests
       v = kdtree.size();
       rs = (v == count);
       if (rs == false) {
-        if (verbose) {
-          StdOut.printf("incorrect size() result: ");
-          StdOut.printf("size() == %d\n", v);
-          StdOut.printf("reference is %d\n", count);
-        }
+        vprintf(verbose, "incorrect size() result: size() == %d\n", v);
+        vprintf(verbose, "reference is %d\n", count);
         break;
       }
     }
@@ -217,19 +207,14 @@ public class KdTreeTests
       v = kdtree.size();
       rs = (v == count);
       if (rs == false) {
-        if (verbose) {
-          StdOut.printf("incorrect size() result: ");
-          StdOut.printf("size() == %d\n", v);
-          StdOut.printf("reference is %d\n", count);
-        }
+        vprintf(verbose, "incorrect size() result: size() == %d\n", v);
+        vprintf(verbose, "reference is %d\n", count);
         break;
       }
     }
 
-    if (verbose) {
-      StdOut.printf("KdTree size() == %d\n", kdtree.size());
-      StdOut.printf("Picked %d random points\n", queue.size());
-    }
+    vprintf(verbose, "KdTree size() == %d\n", kdtree.size());
+    vprintf(verbose, "Picked %d random points\n", queue.size());
 
     count = 0;
     for (Point2D p : queue) {
@@ -239,10 +224,8 @@ public class KdTreeTests
     }
 
     rs &= (count == 0);
-    if (verbose) {
-      if (!rs) {
-        StdOut.printf("%d points are missed\n", count);
-      }
+    if (!rs) {
+      vprintf(verbose, "%d points are missed\n", count);
     }
 
     return printTestFinish(rs);
@@ -273,19 +256,14 @@ public class KdTreeTests
       v = kdtree.size();
       rs = (v == i+1);
       if (rs == false) {
-        if (verbose) {
-          StdOut.printf("incorrect size() result: ");
-          StdOut.printf("size() == %d\n", v);
-          StdOut.printf("reference is %d\n", i+1);
-        }
+        vprintf(verbose, "incorrect size() result: size() == %d\n", v);
+        vprintf(verbose, "reference is %d\n", i+1);
         break;
       }
     }
 
-    if (verbose) {
-      StdOut.printf("KdTree size() == %d\n", kdtree.size());
-      StdOut.printf("Picked %d random points\n", queue.size());
-    }
+    vprintf(verbose, "KdTree size() == %d\n", kdtree.size());
+    vprintf(verbose, "Picked %d random points\n", queue.size());
 
     count = 0;
     for (Point2D p : queue) {
@@ -296,7 +274,7 @@ public class KdTreeTests
     rs &= (count == 0);
     if (verbose) {
       if (!rs) {
-        StdOut.printf("%d points are missed\n", count);
+        vprintf(verbose, "%d points are missed\n", count);
       }
     }
 
@@ -307,11 +285,11 @@ public class KdTreeTests
     throws Exception
   {
     testIsEmpty(false);
-    testContains(false);
-    testContains_grid1by1(true);
-    testSize(false);
-    testSize_input100K(false);
-    // testContains_input100K(false);
-    // testContains_random100K(false);
+    testContains(true);
+    testContains_grid1by1(false);
+    testSize(true);
+    testSize_input100K(true);
+    testContains_input100K(true);
+    testContains_random100K(true);
   }
 }
